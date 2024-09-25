@@ -23,7 +23,6 @@ reposControllers.get("/:id", (req: Request, res: Response) => {
             }
         });
     }
-
     const repo = repos.find(rep => rep.id === req.params.id) as Repo;
     res.status(200).send({ ...repo, languages: repo_languages });
 });
