@@ -4,7 +4,9 @@ import langs from "../../data/langs.json";
 import { Lang } from "./langs.types";
 import Joi from "joi";
 
-const langsController = Router();
+const langsControllers = Router();
+
+let myLangs: Lang[] = langs;
 
 // validation schema
 const schema = Joi.object({
@@ -23,18 +25,38 @@ const validateLang = (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-langsController.get("/", (_, res: Response) => {
-    res.status(200).send(langs);
+langsControllers.get("/", (_, res: Response) => {
+    res.status(200).send(myLangs);
 });
 
-langsController.post("/", validateLang, (req: Request, res: Response) => {
-    langs.push(req.body);
+langsControllers.post("/", validateLang, (req: Request, res: Response) => {
+    myLangs.push(req.body);
     res.status(201).json(req.body);
 });
 
-langsController.get("/:id", (req: Request, res: Response) => {
-    const lang = langs.find(lang => lang.id === parseInt(req.params.id)) as Lang;
-    res.status(200).send(lang);
+langsControllers.get("/:id", (req: Request, res: Response) => {
+    const lang = myLangs.find(lang => lang.id === parseInt(req.params.id)) as Lang;
+    res.status(200).json(lang);
 });
 
-export default langsController;
+langsControllers.delete("/:id", (req: Request, res: Response) => {
+    myLangs = myLangs.filter(lang => lang.id !== parseInt(req.params.id));
+    res.sendStatus(204);
+});
+
+langsControllers.put("/:id", (req: Request, res: Response) => {
+    const id = req.params.id;
+    const { label } = req.body;
+
+    myLangs = myLangs.map(lang => {
+        if (lang.id === parseInt(id)) {
+            return { ...lang, label: label };
+        } else {
+            return lang;
+        }
+    });
+
+    res.sendStatus(204); // No content (implying "resource updated successfully")
+});
+
+export default langsControllers;

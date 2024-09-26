@@ -1,20 +1,18 @@
 meta {
   name: POST langs
   type: http
-  seq: 5
+  seq: 2
 }
 
 post {
-  url: http://localhost:3001/api/repos
+  url: http://localhost:3001/api/langs
   body: json
   auth: none
 }
 
 body:json {
   {
-    "id": "444",
-    "name": "POST repo",
-    "url": "http://local",
-    "isPrivate": 1
+    "id": 9,
+    "label": "COBOL"
   }
 }

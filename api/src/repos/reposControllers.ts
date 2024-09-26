@@ -8,6 +8,8 @@ import Joi from "joi";
 
 const reposControllers = Router();
 
+let myRepos: Repo[] = repos;
+
 // validation schema
 const schema = Joi.object({
     id: Joi.string().required(),
@@ -27,12 +29,14 @@ const validateRepo = (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-reposControllers.get("/", (_, res: Response) => {
-    res.status(200).json(repos);
+reposControllers.get("/", (req: Request, res: Response) => {
+    const { name } = req.query;
+    const result = name === undefined ? myRepos : myRepos.filter((repo: Repo) => repo.name.includes(name as string));
+    res.status(200).json(result);
 });
 
 reposControllers.post("/", validateRepo, (req: Request, res: Response) => {
-    repos.push(req.body);
+    myRepos.push(req.body);
     res.status(201).json(req.body);
 });
 
@@ -48,8 +52,28 @@ reposControllers.get("/:id", (req: Request, res: Response) => {
             }
         });
     }
-    const repo = repos.find(rep => rep.id === req.params.id) as Repo;
+    const repo = myRepos.find(rep => rep.id === req.params.id) as Repo;
     res.status(200).send({ ...repo, languages: repo_languages });
+});
+
+reposControllers.delete("/:id", (req: Request, res: Response) => {
+    myRepos = myRepos.filter((repo: Repo) => repo.id !== req.params.id);
+    res.sendStatus(204);
+});
+
+reposControllers.put("/:id", (req: Request, res: Response) => {
+    const id = req.params.id;
+    const { name, url, isPrivate } = req.body;
+
+    myRepos = myRepos.map(repo => {
+        if (repo.id === id) {
+            return { ...repo, name, url, isPrivate };
+        } else {
+            return repo;
+        }
+    });
+
+    res.sendStatus(204); // No content (implying "resource updated successfully")
 });
 
 export default reposControllers;

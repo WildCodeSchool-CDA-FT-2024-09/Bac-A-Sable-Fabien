@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "WIld - repos",
+  "name": "Sandbox",
   "type": "collection",
   "ignore": [
     "node_modules",

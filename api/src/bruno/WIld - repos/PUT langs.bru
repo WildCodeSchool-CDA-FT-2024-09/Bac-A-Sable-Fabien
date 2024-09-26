@@ -1,0 +1,18 @@
+meta {
+  name: PUT langs
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:3001/api/langs/2
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "id": 2,
+      "label": "HTMLLLLL"
+    }
+}
