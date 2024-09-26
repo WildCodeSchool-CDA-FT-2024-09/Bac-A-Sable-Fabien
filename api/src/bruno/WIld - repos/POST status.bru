@@ -1,0 +1,18 @@
+meta {
+  name: POST status
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:3001/api/langs
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": 8877,
+    "label": "COBOL"
+  }
+}

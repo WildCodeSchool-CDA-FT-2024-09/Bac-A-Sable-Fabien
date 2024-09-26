@@ -1,0 +1,18 @@
+meta {
+  name: POST langbyrepo
+  type: http
+  seq: 9
+}
+
+post {
+  url: http://localhost:3001/api/langbyrepo
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "repo_id": "eeee",
+    "lang_id": 1
+  }
+}

@@ -24,3 +24,8 @@ CREATE TABLE repo_language (
 	id_repo int(11) NOT NULL,
 	id_language int(11) NOT NULL
 );
+
+CREATE TABLE status (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  label varchar(100) NOT NULL,
+);

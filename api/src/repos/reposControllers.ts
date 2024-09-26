@@ -1,14 +1,39 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Router } from "express";
 import repos from "../../data/repo.json";
 import lang_by_repo from "../../data/lang_by_repo.json";
 import langs from "../../data/langs.json";
 import { Repo } from "./repos.types";
+import Joi from "joi";
 
 const reposControllers = Router();
 
+// validation schema
+const schema = Joi.object({
+    id: Joi.string().required(),
+    name: Joi.string().required(),
+    url: Joi.string().required(),
+    isPrivate: Joi.number().min(1).max(2).required(),
+});
+
+// middleware for validation
+const validateRepo = (req: Request, res: Response, next: NextFunction) => {
+    const { error } = schema.validate(req.body);
+
+    if (error) {
+        res.status(422).json(error);
+    } else {
+        next();
+    }
+};
+
 reposControllers.get("/", (_, res: Response) => {
     res.status(200).json(repos);
+});
+
+reposControllers.post("/", validateRepo, (req: Request, res: Response) => {
+    repos.push(req.body);
+    res.status(201).json(req.body);
 });
 
 reposControllers.get("/:id", (req: Request, res: Response) => {
