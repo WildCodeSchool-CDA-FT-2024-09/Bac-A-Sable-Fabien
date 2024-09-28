@@ -1,11 +1,18 @@
 import { Response } from "express";
 import { Router } from "express";
-import status from "../../data/status.json";
+import { StatusType } from "./status.types";
+import { AppDataSource } from "../data-source";
+import { Status } from "./status.entity";
 
 const statusControllers = Router();
 
-statusControllers.get("/", (_, res: Response) => {
-    res.status(200).json(status);
+statusControllers.get("/", async (_, res: Response) => {
+    const result: StatusType[] = await AppDataSource
+        .getRepository(Status)
+        .createQueryBuilder("status")
+        .getMany();
+
+    res.status(200).json(result);
 });
 
 export default statusControllers;

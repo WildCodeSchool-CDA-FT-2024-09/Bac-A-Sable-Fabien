@@ -1,4 +1,4 @@
-export type Lang = {
+export type LangType = {
     id: number;
     label: string;
 };
