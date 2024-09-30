@@ -18,6 +18,7 @@
       "incremental": true,                       // Enable incremental compilation for faster builds
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
+      "strictPropertyInitialization": false
     },
     "include": ["./src/**/*.ts", "src/database/seed.js", "src/database/scrap.js"],                  // Include all .ts files in the src folder
     "exclude": ["node_modules"]          // Exclude unnecessary files from the compilation process

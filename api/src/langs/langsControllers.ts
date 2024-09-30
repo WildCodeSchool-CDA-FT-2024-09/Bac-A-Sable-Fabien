@@ -30,7 +30,7 @@ langsControllers.get("/", async (_: any, res: Response) => {
     res.status(200).send(langs);
 });
 
-langsControllers.post("/", validateLang, async (req: Request, res: Response) => {
+langsControllers.post("/", validateLang, (req: Request, res: Response) => {
     const lang = new Lang();
     lang.label = req.body.label;
     lang.save();
