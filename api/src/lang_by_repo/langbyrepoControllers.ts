@@ -24,7 +24,6 @@ const validateLangbyrepo = (req: Request, res: Response, next: NextFunction) => 
 
 langbyrepoControllers.get("/", async (_, res: Response) => {
     const result = await Langbyrepo.find();
-    console.log(result);
 
     res.status(200).json(result);
 });
