@@ -2,6 +2,7 @@ import express from "express";
 import 'dotenv/config';
 import router from "./router";
 import { AppDataSource } from "./data-source";
+import "reflect-metadata";
 
 const app = express();
 const port = process.env.EXPRESS_PORT;

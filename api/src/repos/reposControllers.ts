@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { Router } from "express";
 import { RepoType } from "./repos.types";
 import Joi from "joi";
-import { AppDataSource } from "../data-source";
 import { Repo } from "./repo.entity";
+import { Like } from "typeorm";
 
 const reposControllers = Router();
 
@@ -31,45 +31,31 @@ reposControllers.get("/", async (req: Request, res: Response) => {
     let result: RepoType[];
 
     if (name) {
-        result = await AppDataSource
-            .getRepository(Repo)
-            .createQueryBuilder("repo")
-            .where("name like :name", { name: `%${name}%` })
-            .getMany();
+        result = await Repo.findBy({
+            name: Like(`%${name}%`)
+        });
     } else {
-        result = await AppDataSource
-            .getRepository(Repo)
-            .createQueryBuilder("repo")
-            .getMany();
+        result = await Repo.find();
     }
 
     res.status(200).json(result);
 });
 
 reposControllers.post("/", validateRepo, async (req: Request, res: Response) => {
-    await AppDataSource
-        .createQueryBuilder()
-        .insert()
-        .into("Repo")
-        .values([
-            {
-                id: req.body.id,
-                name: req.body.name,
-                url: req.body.url,
-                isPrivate: req.body.isPrivate
-            }
-        ])
-        .execute();
+    const repo = new Repo();
+    repo.id = req.body.id;
+    repo.name = req.body.name;
+    repo.url = req.body.url;
+    repo.isPrivate = req.body.isPrivate;
+    repo.save();
 
     res.status(201).json(req.body); // created
 });
 
 reposControllers.get("/:id", async (req: Request, res: Response) => {
-    const result: RepoType | null = await AppDataSource
-        .getRepository(Repo)
-        .createQueryBuilder("repo")
-        .where("id = :id", { id: req.params.id })
-        .getOne();
+    const result = await Repo.findBy({
+        id: req.params.id
+    });
 
     if (result === null) {
         res.sendStatus(204); // no content
@@ -79,36 +65,24 @@ reposControllers.get("/:id", async (req: Request, res: Response) => {
 });
 
 reposControllers.delete("/:id", async (req: Request, res: Response) => {
-    const result = await AppDataSource
-        .createQueryBuilder()
-        .delete()
-        .from(Repo)
-        .where("id = :id", { id: req.params.id })
-        .execute();
-
-    if (result.affected === 0) {
-        res.sendStatus(204); // better http code?
-    } else {
-        res.sendStatus(204);
+    const repo = await Repo.findOneBy({ id: req.params.id });
+    if (repo !== null) {
+        repo.remove();
     }
+    res.sendStatus(204);
 });
 
 reposControllers.put("/:id", validateRepo, async (req: Request, res: Response) => {
     const id = req.params.id;
     const { name, url, isPrivate } = req.body;
 
-    const result = await AppDataSource
-        .createQueryBuilder()
-        .update(Repo)
-        .set({
-            name,
-            url,
-            isPrivate
-        })
-        .where("id = :id", { id })
-        .execute();
-
-    console.log(result);
+    const repo = await Repo.findOneBy({ id });
+    if (repo !== null) {
+        repo.name = name;
+        repo.url = url;
+        repo.isPrivate = isPrivate;
+        repo.save();
+    }
 
     res.sendStatus(204); // No content (implying "resource updated successfully")
 });
