@@ -1,9 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Router } from "express";
-// import langs from "../../data/langs.json";
-import { LangType } from "./langs.types";
+// import { LangType } from "./langs.types";
 import Joi from "joi";
-import { AppDataSource } from "../data-source";
 import { Lang } from "./lang.entity";
 
 const langsControllers = Router();
@@ -26,33 +24,23 @@ const validateLang = (req: Request, res: Response, next: NextFunction) => {
 };
 
 langsControllers.get("/", async (_: any, res: Response) => {
-    const myLangs: LangType[] = await AppDataSource
-        .getRepository(Lang)
-        .createQueryBuilder("lang")
-        .getMany();
+    const langs = await Lang.find();
+    console.log(langs);
 
-    res.status(200).send(myLangs);
+    res.status(200).send(langs);
 });
 
-langsControllers.post("/", validateLang, (req: Request, res: Response) => {
-    AppDataSource
-        .createQueryBuilder()
-        .insert()
-        .into("Lang")
-        .values([
-            { label: req.body.label }
-        ])
-        .execute();
+langsControllers.post("/", validateLang, async (req: Request, res: Response) => {
+    const lang = new Lang();
+    lang.label = req.body.label;
+    lang.save();
 
-    res.status(201).json(req.body);
+    res.status(201).json(req.body); // created
 });
 
 langsControllers.get("/:id", async (req: Request, res: Response) => {
-    const lang: LangType | null = await AppDataSource
-        .getRepository(Lang)
-        .createQueryBuilder("lang")
-        .where("lang.id = :id", { id: req.params.id })
-        .getOne();
+    const id: number = parseInt(req.params.id);
+    const lang = await Lang.findOneBy({ id });
 
     if (lang === null) {
         res.sendStatus(204); // no content
@@ -62,23 +50,21 @@ langsControllers.get("/:id", async (req: Request, res: Response) => {
 });
 
 langsControllers.delete("/:id", async (req: Request, res: Response) => {
-    await AppDataSource
-        .createQueryBuilder()
-        .delete()
-        .from(Lang)
-        .where("id = :id", { id: req.params.id })
-        .execute();
-
+    const id: number = parseInt(req.params.id);
+    const lang = await Lang.findOneBy({ id });
+    if (lang !== null) {
+        lang.remove();
+    }
     res.sendStatus(204); // no content
 });
 
 langsControllers.put("/:id", validateLang, async (req: Request, res: Response) => {
-    await AppDataSource
-        .createQueryBuilder()
-        .update(Lang)
-        .set({ label: req.body.label })
-        .where("id = :id", { id: req.params.id })
-        .execute();
+    const id: number = parseInt(req.params.id);
+    const lang = await Lang.findOneBy({ id });
+    if (lang !== null) {
+        lang.label = req.body.label;
+        lang.save();
+    }
 
     res.sendStatus(204); // No content (implying "resource updated successfully")
 });
