@@ -1,5 +1,5 @@
 import { PrimaryGeneratedColumn, Entity, Column, BaseEntity } from "typeorm";
-import "reflect-metadata";
+import { IsString, Length } from "class-validator";
 
 @Entity()
 export class Lang extends BaseEntity {
@@ -7,5 +7,7 @@ export class Lang extends BaseEntity {
     id: number;
 
     @Column({ type: "varchar", width: 30 })
+    @IsString()
+    @Length(1, 30)
     label: string;
 }

@@ -1,7 +1,6 @@
 .env
 node_modules
 api/data/*.json
-database.sqlite
 reactrouter
 redux
 reduxtypescript

@@ -1,21 +1,35 @@
 import { Request, Response } from "express";
 import { Router } from "express";
 import { Status } from "./status.entity";
+import { StatusType } from "./status.types";
+import { validate } from "class-validator";
 
 const statusControllers = Router();
 
 statusControllers.get("/", async (_, res: Response) => {
-    const result = await Status.find();
-
-    res.status(200).json(result);
+    try {
+        const status: StatusType[] = await Status.find();
+        res.status(200).json(status);
+    } catch (error) {
+        res.sendStatus(500);
+    }
 });
 
-statusControllers.post("/", (req: Request, res: Response) => {
-    const status = new Status();
-    status.label = req.body.label;
-    status.save();
+statusControllers.post("/", async (req: Request, res: Response) => {
+    try {
+        const status = new Status();
+        status.label = req.body.label;
 
-    res.status(201).json(req.body); // created
+        const error = await validate(status);
+        if (error.length > 0) {
+            res.status(422).json(error);
+        } else {
+            await status.save();
+            res.status(201).json(req.body); // created
+        }
+    } catch (error) {
+        res.sendStatus(500);
+    }
 });
 
 export default statusControllers;

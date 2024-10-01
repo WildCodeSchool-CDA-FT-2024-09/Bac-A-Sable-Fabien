@@ -1,8 +1,8 @@
 import express from "express";
 import 'dotenv/config';
 import router from "./router";
-import { AppDataSource } from "./data-source";
-
+import { AppDataSource } from "./database/data-source";
+import "reflect-metadata";
 const app = express();
 const port = process.env.EXPRESS_PORT;
 
@@ -11,7 +11,7 @@ AppDataSource.initialize()
     .then(() => {
         console.log("Data source initialized");
     })
-    .catch((error) => {
+    .catch((error: any) => {
         console.error("Error during data source initialization", error);
     });
 

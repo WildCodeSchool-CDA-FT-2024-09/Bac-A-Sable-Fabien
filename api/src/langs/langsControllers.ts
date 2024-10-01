@@ -1,72 +1,85 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { Router } from "express";
-// import { LangType } from "./langs.types";
-import Joi from "joi";
 import { Lang } from "./lang.entity";
+import { validate } from "class-validator";
+import { LangType } from "./langs.types";
 
 const langsControllers = Router();
 
-// validation schema
-const schema = Joi.object({
-    id: Joi.number().required(),
-    label: Joi.string().required(),
-});
-
-// middleware for validation
-const validateLang = (req: Request, res: Response, next: NextFunction) => {
-    const { error } = schema.validate(req.body);
-
-    if (error) {
-        res.status(422).json(error);
-    } else {
-        next();
-    }
-};
-
 langsControllers.get("/", async (_: any, res: Response) => {
-    const langs = await Lang.find();
-    console.log(langs);
-
-    res.status(200).send(langs);
+    try {
+        const langs: LangType[] = await Lang.find();
+        res.status(200).send(langs);
+    } catch (error) {
+        res.sendStatus(500);
+    }
 });
 
-langsControllers.post("/", validateLang, (req: Request, res: Response) => {
-    const lang = new Lang();
-    lang.label = req.body.label;
-    lang.save();
+langsControllers.post("/", async (req: Request, res: Response) => {
+    try {
+        const lang = new Lang();
+        lang.label = req.body.label;
 
-    res.status(201).json(req.body); // created
+        const error = await validate(lang);
+        if (error.length > 0) {
+            res.status(422).json(error);
+        } else {
+            lang.save();
+            res.status(201).json(req.body); // created
+        }
+    } catch (error) {
+        res.sendStatus(500);
+    }
 });
 
 langsControllers.get("/:id", async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id);
-    const lang = await Lang.findOneBy({ id });
 
-    if (lang === null) {
-        res.sendStatus(204); // no content
-    } else {
-        res.status(200).json(lang);
+    try {
+        const lang = await Lang.findOneBy({ id });
+        if (lang === null) {
+            res.sendStatus(204); // no content
+        } else {
+            res.status(200).json(lang);
+        }
+    } catch (error) {
+        res.sendStatus(500);
     }
 });
 
 langsControllers.delete("/:id", async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id);
-    const lang = await Lang.findOneBy({ id });
-    if (lang !== null) {
-        lang.remove();
+
+    try {
+        const lang = await Lang.findOneBy({ id });
+        if (lang !== null) {
+            await lang.remove();
+        }
+        res.sendStatus(204); // no content
+    } catch (error) {
+        res.sendStatus(500);
     }
-    res.sendStatus(204); // no content
 });
 
-langsControllers.put("/:id", validateLang, async (req: Request, res: Response) => {
+langsControllers.put("/:id", async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id);
-    const lang = await Lang.findOneBy({ id });
-    if (lang !== null) {
-        lang.label = req.body.label;
-        lang.save();
-    }
 
-    res.sendStatus(204); // No content (implying "resource updated successfully")
+    try {
+        const lang = await Lang.findOneBy({ id });
+        if (lang !== null) {
+            lang.label = req.body.label;
+
+            const error = await validate(lang);
+            if (error.length > 0) {
+                res.status(422).json(error);
+            } else {
+                await lang.save();
+                res.sendStatus(204); // No content
+            }
+        }
+    } catch (error) {
+        res.sendStatus(500);
+    }
 });
 
 export default langsControllers;
