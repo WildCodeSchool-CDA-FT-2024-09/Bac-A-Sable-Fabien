@@ -6,15 +6,6 @@ import "reflect-metadata";
 const app = express();
 const port = process.env.EXPRESS_PORT;
 
-// initialzing data source
-AppDataSource.initialize()
-    .then(() => {
-        console.log("Data source initialized");
-    })
-    .catch((error: any) => {
-        console.error("Error during data source initialization", error);
-    });
-
 // enabling json handling
 app.use(express.json());
 
@@ -22,6 +13,8 @@ app.use(express.json());
 app.use('/api', router);
 
 // server running
-app.listen(port, () => {
+app.listen(port, async () => {
+    // initializing data source
+    await AppDataSource.initialize();
     console.log(`Server running http://localhost:${port}`);
 });
