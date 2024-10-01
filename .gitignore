@@ -1,3 +1,4 @@
 .env
 node_modules
 api/data/*.json
+api/src/database/temp.json

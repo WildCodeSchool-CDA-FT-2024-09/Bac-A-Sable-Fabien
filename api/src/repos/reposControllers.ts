@@ -58,9 +58,10 @@ reposControllers.post("/", async (req: Request, res: Response) => {
         repo.status = status;
 
         // add langs
-        const langIds: number[] = req.body.langs;
-        const langs = await Lang.findByIds(langIds);
-        repo.langs = langs;
+        // ICI il faut jouer avec lang_by_repo.json
+        // const langIds: number[] = req.body.langs;
+        // const langs = await Lang.findByIds(langIds);
+        // repo.langs = langs;
 
         // const error = await validate(repo);
         // if (error.length > 0) {
