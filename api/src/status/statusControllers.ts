@@ -8,7 +8,11 @@ const statusControllers = Router();
 
 statusControllers.get("/", async (_, res: Response) => {
     try {
-        const status: StatusType[] = await Status.find();
+        const status: StatusType[] = await Status.find({
+            relations: {
+                repos: true
+            }
+        });
         res.status(200).json(status);
     } catch (error) {
         res.sendStatus(500);

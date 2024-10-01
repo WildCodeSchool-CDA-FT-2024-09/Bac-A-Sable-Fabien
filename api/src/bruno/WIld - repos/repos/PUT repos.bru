@@ -5,16 +5,18 @@ meta {
 }
 
 put {
-  url: http://localhost:3001/api/repos/33333
+  url: http://localhost:3001/api/repos/AAA
   body: json
   auth: none
 }
 
 body:json {
   {
-      "id": "33333",
-      "isPrivate": 2,
-      "name": "Another APP",
-      "url": "https://another"
+      "id": "BBB",
+      "isPrivate": 1,
+      "name": "Third repository",
+      "url": "https://ttt",
+    "isPrivate": 2,
+    "langs": [2]
     }
 }

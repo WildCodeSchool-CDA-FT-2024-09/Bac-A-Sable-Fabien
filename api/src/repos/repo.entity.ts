@@ -1,6 +1,7 @@
-import { IsInt, IsString, Max, Min } from "class-validator";
-import { PrimaryColumn, Entity, Column, BaseEntity/* , ManyToOne */ } from "typeorm";
-// import { Status } from "../status/status.entity";
+import { IsString, Max, Min } from "class-validator";
+import { PrimaryColumn, Entity, Column, BaseEntity, ManyToOne, ManyToMany, JoinTable } from "typeorm";
+import { Status } from "../status/status.entity";
+import { Lang } from "../langs/lang.entity";
 
 @Entity()
 export class Repo extends BaseEntity {
@@ -16,12 +17,12 @@ export class Repo extends BaseEntity {
     @IsString()
     url: string;
 
-    @Column({ type: "int", width: 3 })
-    @IsInt()
+    @ManyToOne(() => Status, (status) => status.id)
     @Min(1)
     @Max(2)
-    isPrivate: number;
+    status: Status;
 
-    // @ManyToOne(() => Status, (stat) => stat.repos)
-    // status: Status;
+    @ManyToMany(() => Lang, lang => lang.repos)
+    @JoinTable()
+    langs?: Lang[];
 }
