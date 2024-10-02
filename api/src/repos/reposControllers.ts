@@ -87,7 +87,8 @@ reposControllers.get("/:id", async (req: Request, res: Response) => {
                 id
             },
             relations: {
-                status: true
+                status: true,
+                langs: true
             }
         });
         if (repo === null) {
