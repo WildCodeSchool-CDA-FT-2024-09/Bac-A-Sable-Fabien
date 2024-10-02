@@ -1,113 +1,82 @@
-import * as fs from "fs";
 import { AppDataSource } from "../database/data-source";
-import { validate } from "class-validator";
 import { Repo } from "../repos/repo.entity";
+import repos from "../../data/repo.json";
+import lang_by_repos from "../../data/lang_by_repo.json";
 import { Lang } from "../langs/lang.entity";
+import langs from "../../data/langs.json";
 import { Status } from "../status/status.entity";
-
+import status from "../../data/status.json";
 
 (async () => {
     // initializing data source
     await AppDataSource.initialize();
 
-    //status
-    const statusRead = await JSON.parse(
-        fs.readFileSync("./data/status.json", { encoding: "utf-8" })
-    );
+    console.log("Starting Seeding...");
 
-    statusRead.map(async (status: any) => {
-        try {
-            const searchResult = await Status.find({
-                where: {
-                    label: status.label
-                }
-            });
+    const queryRunner = AppDataSource.createQueryRunner();
 
-            if (searchResult.length === 0) {
-                const stat = new Status();
-                stat.label = status.label;
+    // big cleanup
+    try {
+        await queryRunner.startTransaction();
 
-                const error = await validate(stat);
-                if (error.length > 0) {
-                    console.error(error);
-                } else {
-                    await stat.save();
-                    console.log(`Status ${status.label} created`);
-                }
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    });
+        await queryRunner.query("DELETE FROM repo_langs_lang");
+        await queryRunner.query("DELETE FROM lang");
+        await queryRunner.query("DELETE FROM repo");
+        await queryRunner.query("DELETE FROM status");
 
-    // langs
-    const langsRead = await JSON.parse(
-        fs.readFileSync("./data/langs.json", { encoding: "utf-8" })
-    );
+        //init sequences
+        await queryRunner.query("DELETE FROM sqlite_sequence WHERE name='status' OR name='lang'");
 
-    langsRead.map(async (lang: any) => {
-        try {
-            const searchResult = await Lang.find({
-                where: {
-                    label: lang.label
-                }
-            });
-
-            if (searchResult.length === 0) {
+        // langs
+        const seedLangs = await Promise.all(
+            langs.map(async (el) => {
                 const lng = new Lang();
-                lng.label = lang.label;
+                lng.label = el.label;
+                return await lng.save();
+            })
+        );
+        console.log(seedLangs);
 
-                const error = await validate(lng);
-                if (error.length > 0) {
-                    console.error(error);
-                } else {
-                    lng.save();
-                    console.log(`Language ${lang.label} created`);
-                }
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    });
+        // status
+        const seedStatus = await Promise.all(
+            status.map(async (el) => {
+                const stat = new Status();
+                stat.label = el.label;
+                return await stat.save();
+            })
+        );
+        console.log(seedStatus);
 
-    // repos
-    const reposRead = await JSON.parse(
-        fs.readFileSync("./data/repo.json", { encoding: "utf-8" })
-    );
-
-    reposRead.map(async (repo: any) => {
-        try {
-            const searchResult = await Repo.find({
-                where: {
-                    id: repo.id
-                }
-            });
-
-            if (searchResult.length === 0) {
-                const rep = new Repo();
-                rep.id = repo.id;
-                rep.name = repo.name;
-                rep.url = repo.url;
+        // repos
+        const seedRepos = await Promise.all(
+            repos.map(async (el) => {
+                const repo = new Repo();
+                repo.id = el.id;
+                repo.name = el.name;
+                repo.url = el.url;
 
                 // status
-                const status = await Status.findOneOrFail({
-                    where: {
-                        id: repo.isPrivate
-                    }
-                });
-                rep.status = status;
+                const status = seedStatus.find(st => st.id === el.isPrivate) as Status;
+                repo.status = status;
 
                 // add langs
-                const langIds: number[] = repo.langs;
-                const langs = await Lang.findByIds(langIds);
-                rep.langs = langs;
+                const repoLangs = seedLangs.filter(lg => {
+                    const repLangs = lang_by_repos.filter(lgbyrepo => lgbyrepo.repo_id === el.id);
+                    const langLabel = langs.filter(ll => repLangs.some(rl => rl.lang_id === ll.id));
+                    return langLabel.some(lgLabel => lgLabel.label === lg.label);
+                });
+                repo.langs = repoLangs;
 
-                await rep.save();
-                console.log(`Repo ${repo.id} created`);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    });
+                return await repo.save();
+            })
+        );
+        console.log(seedRepos);
 
+        await queryRunner.commitTransaction();
+
+        console.log("Seeding Done.");
+    } catch (error) {
+        console.error(error);
+        await queryRunner.rollbackTransaction();
+    }
 })();

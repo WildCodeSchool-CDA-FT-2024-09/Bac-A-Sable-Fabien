@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Router } from "express";
 import { Repo } from "./repo.entity";
-import { Like } from "typeorm";
+import { In, Like } from "typeorm";
 // import { validate } from "class-validator";
 import { Status } from "../status/status.entity";
 import { Lang } from "../langs/lang.entity";
@@ -58,10 +58,13 @@ reposControllers.post("/", async (req: Request, res: Response) => {
         repo.status = status;
 
         // add langs
-        // ICI il faut jouer avec lang_by_repo.json
-        // const langIds: number[] = req.body.langs;
-        // const langs = await Lang.findByIds(langIds);
-        // repo.langs = langs;
+        const langIds: number[] = req.body.langs;
+        const langs = await Lang.find({
+            where: {
+                id: In(langIds.map((l: number) => l))
+            }
+        });
+        repo.langs = langs;
 
         // const error = await validate(repo);
         // if (error.length > 0) {
