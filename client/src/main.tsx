@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
-import ErrorPage from "./error-page";
+import ErrorPage from "./pages/error-page";
 import Repo, { loader as repoLoader } from "./pages/Repo";
 import Root, { loader as langsLoader } from "./pages/Root";
 import Index, { loader as indexLoader } from "./pages/Index";

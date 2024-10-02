@@ -13,7 +13,16 @@ export default function Repo() {
   return (
     <div id="repo">
       <div>
-        <h2 className="font-bold text-2xl pb-4">{repo.name}</h2>
+        <h2 className="font-bold text-2xl pb-4">
+          {repo.name}
+          <span
+            className={`${
+              repo.status.label === "private" ? "bg-red-400" : "bg-green-400"
+            } rounded px-1 ml-2 text-sm`}
+          >
+            {repo.status.label}
+          </span>
+        </h2>
 
         {repo.url && (
           <p className="pb-4">
@@ -23,15 +32,14 @@ export default function Repo() {
           </p>
         )}
 
-        <p>
-          <span
-            className={`${
-              repo.status.label === "private" ? "bg-red-400" : "bg-green-400"
-            } rounded px-1`}
-          >
-            {repo.status.label}
-          </span>
-        </p>
+        <p>Languages:</p>
+        <ul>
+          {repo.langs.map((lang) => (
+            <li className="list-disc ml-5" key={lang.id}>
+              {lang.label}
+            </li>
+          ))}
+        </ul>
 
         <div className="flex flex-rows gap-4 my-4">
           <Form action="edit">
