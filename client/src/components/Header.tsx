@@ -9,9 +9,7 @@ const Header = ({ langs }) => {
       </h1>
       <nav className="w-full flex flex-row justify-between py-4">
         {langs.length ? (
-          langs.map((lg: Lang) => {
-            return <button key={lg.id}>{lg.label}</button>;
-          })
+          langs.map((lg: Lang) => <button key={lg.id}>{lg.label}</button>)
         ) : (
           <p>No Languages</p>
         )}
