@@ -8,9 +8,8 @@ dotenv.config();
 const { EXPRESS_PORT, CORS_FRONTEND_URLS } = process.env;
 const app = express();
 
-const corsUrls = CORS_FRONTEND_URLS?.split(",");
-
 // cors
+const corsUrls = CORS_FRONTEND_URLS?.split(",");
 app.use(
     cors({
         origin: corsUrls,

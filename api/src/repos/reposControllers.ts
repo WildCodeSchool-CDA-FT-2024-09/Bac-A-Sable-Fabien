@@ -10,8 +10,6 @@ const reposControllers = Router();
 
 reposControllers.get("/", async (req: Request, res: Response) => {
     const { name, lang } = req.query;
-    console.log(lang);
-
     let repos;
 
     if (name || lang) {
@@ -30,8 +28,6 @@ reposControllers.get("/", async (req: Request, res: Response) => {
                     langs: true
                 }
             });
-            console.log(repos);
-
             res.status(200).json(repos);
         } catch (error) {
             res.sendStatus(500);
