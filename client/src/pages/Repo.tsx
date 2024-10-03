@@ -4,7 +4,7 @@ import { Repo as RepoType } from "../types/repoType";
 import { useEffect, useState } from "react";
 import axiosInstance from "../services/connection";
 
-export default function Repo() {
+const Repo = () => {
   const [repo, setRepo] = useState<RepoType>(null);
   const { repoId } = useParams();
 
@@ -12,7 +12,7 @@ export default function Repo() {
     const fetchRepo = async () => {
       try {
         const repo = await axiosInstance.get<RepoType>(`/api/repos/${repoId}`);
-        setRepo(repo.data[0]);
+        setRepo(repo.data);
       } catch (error) {
         console.error(error);
       }
@@ -78,4 +78,6 @@ export default function Repo() {
       )}
     </div>
   );
-}
+};
+
+export default Repo;

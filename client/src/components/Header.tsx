@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Lang } from "../types/langType";
 import { useEffect, useState } from "react";
 import axiosInstance from "../services/connection";
 
 const Header = () => {
   const [langs, setlangs] = useState<Lang[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLangs = async () => {
@@ -18,8 +19,8 @@ const Header = () => {
     fetchLangs();
   }, []);
 
-  const handleLangFilter = (lg) => {
-    console.log(lg);
+  const handleLangFilter = (lg: Lang) => {
+    navigate(`/?lang=${lg.label}`);
   };
 
   return (
