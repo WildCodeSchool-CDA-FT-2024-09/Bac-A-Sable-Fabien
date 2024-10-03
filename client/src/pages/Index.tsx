@@ -1,15 +1,22 @@
-import { useLoaderData } from "react-router-dom";
-import { getRepos } from "../api/getData";
+import { useEffect, useState } from "react";
+import axiosInstance from "../services/connection";
 import { Repo } from "../types/repoType";
 import RepoCard from "../components/RepoCard";
 
-export async function loader() {
-  const repos = await getRepos();
-  return { repos };
-}
-
 const Index = () => {
-  const { repos } = useLoaderData();
+  const [repos, setRepos] = useState<Repo[]>([]);
+
+  useEffect(() => {
+    const fetchRepos = async () => {
+      try {
+        const repos = await axiosInstance.get<Repo[]>("/api/repos");
+        setRepos(repos.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchRepos();
+  }, []);
 
   return (
     <>

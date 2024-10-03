@@ -1,7 +1,23 @@
 import { Link } from "react-router-dom";
 import { Lang } from "../types/langType";
+import { useEffect, useState } from "react";
+import axiosInstance from "../services/connection";
 
-const Header = ({ langs }) => {
+const Header = () => {
+  const [langs, setlangs] = useState<Lang[]>([]);
+
+  useEffect(() => {
+    const fetchLangs = async () => {
+      try {
+        const langs = await axiosInstance.get<Lang[]>("/api/langs");
+        setlangs(langs.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchLangs();
+  }, []);
+
   const handleLangFilter = (lg) => {
     console.log(lg);
   };

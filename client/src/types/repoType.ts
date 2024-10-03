@@ -2,7 +2,11 @@ export type Repo = {
     id: string;
     name: string;
     url: string;
-    isPrivate: number;
+    status:
+    {
+        id: number;
+        label: string;
+    },
     langs: [
         {
             id: number;
