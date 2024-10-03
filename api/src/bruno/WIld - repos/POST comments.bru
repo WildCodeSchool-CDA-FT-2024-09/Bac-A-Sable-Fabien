@@ -1,0 +1,20 @@
+meta {
+  name: POST comments
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:3001/api/comments
+  body: json
+  auth: none
+}
+
+body:json {
+    {
+      "id": 2,
+      "repoId": "R_kgDOMu_ppg",
+      "name": "Suki",
+      "comment": "qghqt htss thsrt st hstr"
+    }
+}
