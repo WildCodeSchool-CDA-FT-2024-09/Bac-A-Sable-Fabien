@@ -2,16 +2,21 @@ import { Link } from "react-router-dom";
 
 const RepoCard = ({ repo }) => {
   return (
-    <div className="bg-slate-100 p-4 rounded-md shadow-md" key={repo.id}>
-      <h3 className="font-bold text-2xl">
+    <div
+      className="bg-slate-100 hover:bg-slate-200 p-4 rounded-md shadow-md"
+      key={repo.id}
+    >
+      <h3 className="font-bold text-2xl mb-1">
         <Link className="underline " to={`/repos/${repo.id}`}>
           {repo.name}
         </Link>
       </h3>
       <p className="mb-2 text-sm">
-        <Link to={`/repos/${repo.id}`}>See Repo</Link>
+        <Link className="text-slate-600" to={`${repo.url}`}>
+          Got to GitHub Repo
+        </Link>
       </p>
-      {repo.langs ? (
+      {repo.langs.length ? (
         <>
           <p>Languages:</p>
           <ul>
@@ -23,7 +28,9 @@ const RepoCard = ({ repo }) => {
           </ul>
         </>
       ) : (
-        <p>No Language</p>
+        <p>
+          <i className="text-slate-400">No Language</i>
+        </p>
       )}
     </div>
   );
