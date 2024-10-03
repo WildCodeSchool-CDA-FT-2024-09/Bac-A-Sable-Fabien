@@ -1,16 +1,22 @@
 import express from "express";
-import 'dotenv/config';
+import * as dotenv from "dotenv";
 import router from "./router";
 import { AppDataSource } from "./database/data-source";
 import "reflect-metadata";
 import cors from "cors";
+dotenv.config();
+const { EXPRESS_PORT, CORS_FRONTEND_URLS } = process.env;
 const app = express();
-const { EXPRESS_PORT, CORS_FRONTEND_URL } = process.env;
+
+const corsUrls = CORS_FRONTEND_URLS?.split(",");
 
 // cors
-app.use(cors({
-    origin: [CORS_FRONTEND_URL as string]
-}));
+app.use(
+    cors({
+        origin: corsUrls,
+        optionsSuccessStatus: 200
+    })
+);
 
 // enabling json handling
 app.use(express.json());

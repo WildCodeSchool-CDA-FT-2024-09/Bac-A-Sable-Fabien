@@ -9,21 +9,29 @@ import { Lang } from "../langs/lang.entity";
 const reposControllers = Router();
 
 reposControllers.get("/", async (req: Request, res: Response) => {
-    const { name/* , lang */ } = req.query;
+    const { name, lang } = req.query;
+    console.log(lang);
+
     let repos;
 
-    if (name) {
+    if (name || lang) {
         try {
             repos = await Repo.find({
                 where: [
-                    { name: Like(`%${name}%`) }/* ,
-                    { langs: Like(`%${lang}%`) } */
+                    { name: Like(`%${name}%`) },
+                    {
+                        langs: {
+                            label: `${lang}`
+                        }
+                    }
                 ],
                 relations: {
                     status: true,
                     langs: true
                 }
             });
+            console.log(repos);
+
             res.status(200).json(repos);
         } catch (error) {
             res.sendStatus(500);
@@ -83,7 +91,7 @@ reposControllers.get("/:id", async (req: Request, res: Response) => {
     const id: string = req.params.id;
 
     try {
-        const repo = await Repo.find({
+        const repo = await Repo.findOne({
             where: {
                 id
             },
