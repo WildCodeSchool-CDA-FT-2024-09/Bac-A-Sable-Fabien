@@ -3,24 +3,24 @@ import 'dotenv/config';
 import router from "./router";
 import { AppDataSource } from "./database/data-source";
 import "reflect-metadata";
-const cors = require("cors");
+import cors from "cors";
 const app = express();
-const port = process.env.EXPRESS_PORT;
+const { EXPRESS_PORT, CORS_FRONTEND_URL } = process.env;
+
+// cors
+app.use(cors({
+    origin: [CORS_FRONTEND_URL as string]
+}));
 
 // enabling json handling
 app.use(express.json());
 
-// cors
-app.use(cors({
-    origin: 'http://127.0.0.1:5173'
-}));
-
-// settings routes
+// setting routes
 app.use('/api', router);
 
 // server running
-app.listen(port, async () => {
+app.listen(EXPRESS_PORT, async () => {
     // initializing data source
     await AppDataSource.initialize();
-    console.log(`Server running http://localhost:${port}`);
+    console.log(`Server running http://localhost:${EXPRESS_PORT}`);
 });

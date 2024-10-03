@@ -9,15 +9,16 @@ import { Lang } from "../langs/lang.entity";
 const reposControllers = Router();
 
 reposControllers.get("/", async (req: Request, res: Response) => {
-    const { name } = req.query;
+    const { name/* , lang */ } = req.query;
     let repos;
 
     if (name) {
         try {
             repos = await Repo.find({
-                where: {
-                    name: Like(`%${name}%`)
-                },
+                where: [
+                    { name: Like(`%${name}%`) }/* ,
+                    { langs: Like(`%${lang}%`) } */
+                ],
                 relations: {
                     status: true,
                     langs: true
