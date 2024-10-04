@@ -40,4 +40,23 @@ commentsControllers.post("/", async (req: Request, res: Response) => {
   }
 });
 
+commentsControllers.get("/:repoId", async (req: Request, res: Response) => {
+  const repoId = req.params.repoId;
+
+  try {
+    const comments: Comment[] = await Comment.find({
+      where: {
+        repoId
+      }
+    });
+    if (comments === null) {
+      res.sendStatus(204); // no content
+    } else {
+      res.status(200).json(comments);
+    }
+  } catch (error) {
+    res.sendStatus(500);
+  }
+});
+
 export default commentsControllers;
