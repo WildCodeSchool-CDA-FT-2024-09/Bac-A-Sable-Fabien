@@ -15,6 +15,14 @@ reposControllers.get("/", async (req: Request, res: Response) => {
     if (name || lang) {
         try {
             repos = await Repo.find({
+                // Here we do a AND
+                // where: {
+                //     name: Like(`%${name}%`),
+                //     langs: {
+                //         label: `${lang}`
+                //     }
+                // },
+                // here it's a OR
                 where: [
                     { name: Like(`%${name}%`) },
                     {
