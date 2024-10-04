@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { Repo as RepoType } from "../types/repoType";
 import { useEffect, useState } from "react";
 import axiosInstance from "../services/connection";
-import Comments from "../components/Comments";
+import Comments from "./Comments";
 
 const Repo = () => {
   const [repo, setRepo] = useState<RepoType>(null);
@@ -23,7 +23,7 @@ const Repo = () => {
   return (
     <div id="repo">
       {repo ? (
-        <div className="bg-slate-100 rounded p-2 mb-2">
+        <div className="bg-slate-100 rounded-lg shadow-lg p-2 mb-2">
           <h2 className="font-bold text-3xl pb-4">
             {repo.name}
             <span
@@ -55,7 +55,7 @@ const Repo = () => {
               </ul>
             </div>
           )}
-          <Comments />
+          <Comments repoId={repoId} />
         </div>
       ) : (
         <p>Loading...</p>

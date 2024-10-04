@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../services/connection";
 import { Repo } from "../types/repoType";
-import RepoCard from "../components/RepoCard";
+import RepoCard from "./RepoCard";
 import { useSearchParams } from "react-router-dom";
 
 const Index = () => {

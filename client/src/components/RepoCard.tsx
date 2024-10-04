@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const RepoCard = ({ repo }) => {
   return (
     <div
-      className="bg-slate-100 hover:bg-slate-200 p-4 rounded-md shadow-md"
+      className="bg-white hover:bg-gray-300 p-4 rounded-md shadow-md"
       key={repo.id}
     >
       <h3 className="font-bold text-2xl mb-1">
