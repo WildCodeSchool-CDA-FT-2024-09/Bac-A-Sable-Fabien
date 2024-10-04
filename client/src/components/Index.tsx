@@ -7,16 +7,30 @@ import { useSearchParams } from "react-router-dom";
 const Index = () => {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [searchParams] = useSearchParams();
+  let searchQuery = "";
   const searchLang =
     searchParams.get("lang") !== null
       ? "?lang=" + searchParams.get("lang")
       : "";
+  const searchName =
+    searchParams.get("name") !== null ? "name=" + searchParams.get("name") : "";
+  if (searchLang !== "") {
+    if (searchName !== "") {
+      searchQuery += searchLang + "&" + searchName;
+    } else {
+      searchQuery += searchLang;
+    }
+  } else {
+    searchQuery += "?" + searchName;
+  }
+
+  console.log(searchQuery);
 
   useEffect(() => {
     const fetchRepos = async () => {
       try {
         const repos = await axiosInstance.get<Repo[]>(
-          `/api/repos${searchLang}`,
+          `/api/repos${searchQuery}`,
         );
         setRepos(repos.data);
       } catch (error) {
