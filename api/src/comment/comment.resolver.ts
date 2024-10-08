@@ -52,4 +52,15 @@ export default class CommentResolver {
         await comment.save();
         return comment;
     }
+
+    @Mutation(() => Boolean)
+    async deleteComment(@Arg("id") id: number) {
+        // TODO: data validation
+        const repo = await Comment.findOneBy({ id });
+        if (repo !== null) {
+            await repo.remove();
+            return true;
+        }
+        return false;
+    }
 }
