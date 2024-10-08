@@ -2,11 +2,11 @@ import { Request, Response } from "express";
 import { Router } from "express";
 import { Lang } from "./lang.entity";
 import { validate } from "class-validator";
-import { LangType } from "./langs.types";
+import { LangType } from "./lang.type";
 
-const langsControllers = Router();
+const langController = Router();
 
-langsControllers.get("/", async (_: any, res: Response) => {
+langController.get("/", async (_: any, res: Response) => {
     try {
         const langs: LangType[] = await Lang.find();
         res.status(200).send(langs);
@@ -15,7 +15,7 @@ langsControllers.get("/", async (_: any, res: Response) => {
     }
 });
 
-langsControllers.post("/", async (req: Request, res: Response) => {
+langController.post("/", async (req: Request, res: Response) => {
     try {
         const lang = new Lang();
         lang.label = req.body.label;
@@ -32,7 +32,7 @@ langsControllers.post("/", async (req: Request, res: Response) => {
     }
 });
 
-langsControllers.get("/:id", async (req: Request, res: Response) => {
+langController.get("/:id", async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id);
 
     try {
@@ -47,7 +47,7 @@ langsControllers.get("/:id", async (req: Request, res: Response) => {
     }
 });
 
-langsControllers.delete("/:id", async (req: Request, res: Response) => {
+langController.delete("/:id", async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id);
 
     try {
@@ -61,7 +61,7 @@ langsControllers.delete("/:id", async (req: Request, res: Response) => {
     }
 });
 
-langsControllers.put("/:id", async (req: Request, res: Response) => {
+langController.put("/:id", async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id);
 
     try {
@@ -82,4 +82,4 @@ langsControllers.put("/:id", async (req: Request, res: Response) => {
     }
 });
 
-export default langsControllers;
+export default langController;

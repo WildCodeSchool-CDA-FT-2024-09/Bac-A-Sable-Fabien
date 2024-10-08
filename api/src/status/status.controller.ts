@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import { Router } from "express";
 import { Status } from "./status.entity";
-import { StatusType } from "./status.types";
+import { StatusType } from "./status.type";
 import { validate } from "class-validator";
 
-const statusControllers = Router();
+const statusController = Router();
 
-statusControllers.get("/", async (_, res: Response) => {
+statusController.get("/", async (_, res: Response) => {
     try {
         const status: StatusType[] = await Status.find({
             relations: {
@@ -19,7 +19,7 @@ statusControllers.get("/", async (_, res: Response) => {
     }
 });
 
-statusControllers.post("/", async (req: Request, res: Response) => {
+statusController.post("/", async (req: Request, res: Response) => {
     try {
         const status = new Status();
         status.label = req.body.label;
@@ -36,4 +36,4 @@ statusControllers.post("/", async (req: Request, res: Response) => {
     }
 });
 
-export default statusControllers;
+export default statusController;

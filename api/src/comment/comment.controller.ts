@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import { Router } from "express";
 import { Comment } from "./comment.entity";
-import { CommentType } from "./comments.types";
-// import { validate } from "class-validator";
+import { CommentType } from "./comment.type";
 
-const commentsControllers = Router();
+const commentController = Router();
 
-commentsControllers.get("/", async (req: Request, res: Response) => {
+commentController.get("/", async (req: Request, res: Response) => {
   const repoId: string = req.params.repoId;
 
   try {
@@ -21,7 +20,7 @@ commentsControllers.get("/", async (req: Request, res: Response) => {
   }
 });
 
-commentsControllers.post("/", async (req: Request, res: Response) => {
+commentController.post("/", async (req: Request, res: Response) => {
   try {
     const comment = new Comment();
     comment.repoId = req.body.repoId;
@@ -40,7 +39,7 @@ commentsControllers.post("/", async (req: Request, res: Response) => {
   }
 });
 
-commentsControllers.get("/:repoId", async (req: Request, res: Response) => {
+commentController.get("/:repoId", async (req: Request, res: Response) => {
   const repoId = req.params.repoId;
 
   try {
@@ -59,4 +58,4 @@ commentsControllers.get("/:repoId", async (req: Request, res: Response) => {
   }
 });
 
-export default commentsControllers;
+export default commentController;

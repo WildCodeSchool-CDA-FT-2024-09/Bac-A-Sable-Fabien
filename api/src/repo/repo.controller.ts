@@ -2,13 +2,12 @@ import { Request, Response } from "express";
 import { Router } from "express";
 import { Repo } from "./repo.entity";
 import { In, Like } from "typeorm";
-// import { validate } from "class-validator";
 import { Status } from "../status/status.entity";
-import { Lang } from "../langs/lang.entity";
+import { Lang } from "../lang/lang.entity";
 
-const reposControllers = Router();
+const repoController = Router();
 
-reposControllers.get("/", async (req: Request, res: Response) => {
+repoController.get("/", async (req: Request, res: Response) => {
     const { name, lang } = req.query;
     let repos;
 
@@ -55,7 +54,7 @@ reposControllers.get("/", async (req: Request, res: Response) => {
     }
 });
 
-reposControllers.post("/", async (req: Request, res: Response) => {
+repoController.post("/", async (req: Request, res: Response) => {
     try {
         const repo = new Repo();
         repo.id = req.body.id;
@@ -91,7 +90,7 @@ reposControllers.post("/", async (req: Request, res: Response) => {
     }
 });
 
-reposControllers.patch("/:id", async (req: Request, res: Response) => {
+repoController.patch("/:id", async (req: Request, res: Response) => {
     try {
         const repo = await Repo.findOneOrFail({
             where: {
@@ -106,7 +105,7 @@ reposControllers.patch("/:id", async (req: Request, res: Response) => {
     }
 });
 
-reposControllers.get("/:id", async (req: Request, res: Response) => {
+repoController.get("/:id", async (req: Request, res: Response) => {
     const id: string = req.params.id;
 
     try {
@@ -129,7 +128,7 @@ reposControllers.get("/:id", async (req: Request, res: Response) => {
     }
 });
 
-reposControllers.delete("/:id", async (req: Request, res: Response) => {
+repoController.delete("/:id", async (req: Request, res: Response) => {
     const repo = await Repo.findOneBy({ id: req.params.id });
     if (repo !== null) {
         await repo.remove();
@@ -137,7 +136,7 @@ reposControllers.delete("/:id", async (req: Request, res: Response) => {
     res.sendStatus(204);
 });
 
-reposControllers.put("/:id", async (req: Request, res: Response) => {
+repoController.put("/:id", async (req: Request, res: Response) => {
     const id = req.params.id;
     const { name, url, isPrivate } = req.body;
 
@@ -175,4 +174,4 @@ reposControllers.put("/:id", async (req: Request, res: Response) => {
     }
 });
 
-export default reposControllers;
+export default repoController;

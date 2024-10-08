@@ -1,8 +1,8 @@
 import { AppDataSource } from "../database/data-source";
-import { Repo } from "../repos/repo.entity";
+import { Repo } from "../repo/repo.entity";
 import repos from "../../data/repo.json";
 import lang_by_repos from "../../data/lang_by_repo.json";
-import { Lang } from "../langs/lang.entity";
+import { Lang } from "../lang/lang.entity";
 import langs from "../../data/langs.json";
 import { Status } from "../status/status.entity";
 import status from "../../data/status.json";
