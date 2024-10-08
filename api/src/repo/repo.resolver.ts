@@ -1,8 +1,9 @@
 import { Repo } from "./repo.entity";
+import { Status } from "../status/status.entity";
 import { Arg, Field, InputType, Mutation, Query, Resolver } from 'type-graphql';
 
 @InputType()
-class RepoInput {
+class RepoInput implements Partial<Repo> {
     @Field()
     id: string;
 
@@ -11,18 +12,22 @@ class RepoInput {
 
     @Field()
     url: string;
+
+    @Field()
+    isPrivate: number;
 }
 
 @Resolver(Repo)
 export default class RepoResolver {
     @Query(() => [Repo])
     async getRepos() {
-        return await Repo.find({
+        const repos = await Repo.find({
             relations: {
                 status: true,
                 langs: true
             }
         });
+        return repos;
     }
 
     @Query(() => Repo)
@@ -44,8 +49,33 @@ export default class RepoResolver {
         repo.id = newRepo.id;
         repo.name = newRepo.name;
         repo.url = newRepo.url;
+
+        const status = await Status.findOneOrFail({
+            where: { id: +newRepo.isPrivate },
+        });
+        repo.status = status;
+
         await repo.save();
-        return repo;
+
+        const myRepo = await Repo.findOneOrFail({
+            where: { id: newRepo.id },
+            relations: {
+                langs: true,
+                status: true,
+            },
+        });
+
+        return myRepo;
+    }
+
+    @Mutation(() => Boolean)
+    async deleteRepo(@Arg("id") id: string) {
+        const repo = await Repo.findOneBy({ id });
+        if (repo !== null) {
+            await repo.remove();
+            return true;
+        }
+        return false;
     }
 };
 

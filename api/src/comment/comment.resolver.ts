@@ -55,10 +55,9 @@ export default class CommentResolver {
 
     @Mutation(() => Boolean)
     async deleteComment(@Arg("id") id: number) {
-        // TODO: data validation
-        const repo = await Comment.findOneBy({ id });
-        if (repo !== null) {
-            await repo.remove();
+        const comment = await Comment.findOneBy({ id });
+        if (comment !== null) {
+            await comment.remove();
             return true;
         }
         return false;
