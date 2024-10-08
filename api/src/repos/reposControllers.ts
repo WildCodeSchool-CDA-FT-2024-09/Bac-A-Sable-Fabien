@@ -91,6 +91,21 @@ reposControllers.post("/", async (req: Request, res: Response) => {
     }
 });
 
+reposControllers.patch("/:id", async (req: Request, res: Response) => {
+    try {
+        const repo = await Repo.findOneOrFail({
+            where: {
+                id: req.params.id
+            }
+        });
+        repo.isFavorite = req.body.isFavorite;
+        repo.save();
+        res.sendStatus(203);
+    } catch (error) {
+        res.sendStatus(500);
+    }
+});
+
 reposControllers.get("/:id", async (req: Request, res: Response) => {
     const id: string = req.params.id;
 

@@ -1,4 +1,4 @@
-import { IsString, Max, Min } from "class-validator";
+import { IsBoolean, IsString, Max, Min } from "class-validator";
 import { PrimaryColumn, Entity, Column, BaseEntity, ManyToOne, ManyToMany, JoinTable } from "typeorm";
 import { Status } from "../status/status.entity";
 import { Lang } from "../langs/lang.entity";
@@ -16,6 +16,12 @@ export class Repo extends BaseEntity {
     @Column({ type: "varchar", width: 100 })
     @IsString()
     url: string;
+
+    @Column({
+        default: () => false
+    })
+    @IsBoolean()
+    isFavorite: boolean;
 
     @ManyToOne(() => Status, (status) => status.id)
     @Min(1)
