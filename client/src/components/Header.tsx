@@ -18,9 +18,10 @@ const Header = () => {
       }
     };
     fetchLangs();
-  }, []);
+  }, [langs]);
 
   const handleLangFilter = (lg: Lang) => {
+    setSearch("");
     navigate(`/?lang=${lg.label}`);
   };
 
@@ -46,8 +47,8 @@ const Header = () => {
             type="text"
             name="search"
             id="search"
-            className="block w-full h-11 px-5 py-2.5 leading-7 text-base font-normal shadow-xs bg-lightgrey text-black border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none"
-            placeholder="Search in your repositories..."
+            className="px-5 py-2.5 leading-7 text-base font-normal shadow-xs bg-lightgrey text-black border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none"
+            placeholder="Search in repositories..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

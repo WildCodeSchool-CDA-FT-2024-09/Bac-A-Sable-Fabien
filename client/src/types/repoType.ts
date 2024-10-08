@@ -12,5 +12,6 @@ export type Repo = {
             id: number;
             label: string;
         },
-    ];
+    ],
+    isFavorite: boolean;
 } | null;

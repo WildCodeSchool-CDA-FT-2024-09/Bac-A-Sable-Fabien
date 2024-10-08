@@ -8,6 +8,16 @@ const Repo = () => {
   const [repo, setRepo] = useState<RepoType>(null);
   const { repoId } = useParams();
 
+  const handleLike = async () => {
+    try {
+      await axiosInstance.patch(`/api/repos/${repoId}`, {
+        isFavorite: !repo?.isFavorite,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     const fetchRepo = async () => {
       try {
@@ -34,6 +44,13 @@ const Repo = () => {
               {repo.status.label}
             </span>
           </h2>
+          <button
+            className="rounded px-1 ml-2 text-sm font-normal bg-red-400 text-white"
+            type="button"
+            onClick={handleLike}
+          >
+            Like
+          </button>
 
           {repo.url && (
             <p className="pb-4">

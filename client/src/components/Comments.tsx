@@ -4,8 +4,8 @@ import { Comment } from "../types/commentType";
 
 const Comments = ({ repoId }) => {
   const [comments, setComments] = useState<Comment[]>([]);
-  const [name, setName] = useState("");
-  const [comment, setComment] = useState("");
+  const [name, setName] = useState<string>("");
+  const [comment, setComment] = useState<string>("");
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -24,13 +24,14 @@ const Comments = ({ repoId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post<Comment[]>(
+      await axiosInstance.post<Comment[]>(
         `/api/comments`,
         JSON.stringify({ name, comment, repoId }),
         {
           headers: { "Content-Type": "application/json" },
         },
       );
+
       setName("");
       setComment("");
     } catch (error) {
@@ -87,14 +88,13 @@ const Comments = ({ repoId }) => {
                 Comment
               </label>
               <textarea
-                type="text"
                 name="comment"
                 id="comment"
                 className="w-full px-5 py-2.5 leading-7 text-base font-normal shadow-xs text-black bg-lightgrey border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none"
                 placeholder="Your comment..."
                 required
-                rows="5"
-                cols="10"
+                rows={5}
+                cols={10}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
               ></textarea>
