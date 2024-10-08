@@ -1,31 +1,35 @@
-import express from "express";
-import * as dotenv from "dotenv";
-import router from "./router";
-import { AppDataSource } from "./database/data-source";
-import "reflect-metadata";
-import cors from "cors";
-dotenv.config();
-const { EXPRESS_PORT, CORS_FRONTEND_URLS } = process.env;
-const app = express();
+import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
 
-// cors
-const corsUrls = CORS_FRONTEND_URLS?.split(",");
-app.use(
-    cors({
-        origin: corsUrls,
-        optionsSuccessStatus: 200
-    })
-);
+import repos from "../data/repo.json";
 
-// enabling json handling
-app.use(express.json());
+const typeDefs = `#graphql
+  type Repo {
+    id: String
+    name: String
+    url: String
+  }
 
-// setting routes
-app.use('/api', router);
+  type Query {
+    repos: [Repo]
+  }
+`;
 
-// server running
-app.listen(EXPRESS_PORT, async () => {
-    // initializing data source
-    await AppDataSource.initialize();
-    console.log(`Server running http://localhost:${EXPRESS_PORT}`);
+const resolvers = {
+    Query: {
+        repos: () => repos,
+    },
+};
+
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
 });
+
+(async () => {
+    const { url } = await startStandaloneServer(server, {
+        listen: { port: 4000 },
+    });
+
+    console.log(`🚀  Server ready at: ${url}`);
+})();
