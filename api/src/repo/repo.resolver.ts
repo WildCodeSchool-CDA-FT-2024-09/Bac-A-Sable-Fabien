@@ -1,6 +1,7 @@
 import { Repo } from "./repo.entity";
 import { Status } from "../status/status.entity";
 import { Arg, Field, InputType, Mutation, Query, Resolver } from 'type-graphql';
+import { validate } from "class-validator";
 
 @InputType()
 class RepoInput implements Partial<Repo> {
@@ -44,7 +45,6 @@ export default class RepoResolver {
 
     @Mutation(() => Repo)
     async createNewRepo(@Arg("data") newRepo: RepoInput) {
-        // TODO: data validation
         const repo = new Repo();
         repo.id = newRepo.id;
         repo.name = newRepo.name;
@@ -54,6 +54,9 @@ export default class RepoResolver {
             where: { id: +newRepo.isPrivate },
         });
         repo.status = status;
+
+        const error = await validate(repo);
+        if (error.length > 0) throw new Error(`Validation Error: ${error}`);
 
         await repo.save();
 

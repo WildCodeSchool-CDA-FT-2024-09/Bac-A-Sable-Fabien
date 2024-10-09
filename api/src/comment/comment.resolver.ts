@@ -1,8 +1,9 @@
 import { Arg, Query, Resolver, InputType, Field, Mutation } from "type-graphql";
 import { Comment } from "./comment.entity";
+import { validate } from "class-validator";
 
 @InputType()
-class CommentInput {
+class CreateCommentInput {
     @Field()
     id: number;
 
@@ -16,10 +17,22 @@ class CommentInput {
     repoId: string;
 }
 
+@InputType()
+class UpdateCommentInput {
+    @Field({ nullable: true })
+    name: string;
+
+    @Field({ nullable: true })
+    comment: string;
+
+    @Field({ nullable: true })
+    repoId: string;
+}
+
 @Resolver(Comment)
 export default class CommentResolver {
     @Query(() => [Comment])
-    async getComments() {
+    async getAllComments() {
         return await Comment.find();
     }
 
@@ -33,7 +46,7 @@ export default class CommentResolver {
     }
 
     @Query(() => [Comment])
-    async getCommentOfRepo(@Arg("repoId") repoId: string) {
+    async getCommentsOfRepo(@Arg("repoId") repoId: string) {
         return await Comment.find({
             where: {
                 repoId: repoId
@@ -42,13 +55,27 @@ export default class CommentResolver {
     }
 
     @Mutation(() => Comment)
-    async createNewComment(@Arg("data") newComment: CommentInput) {
-        // TODO: data validation
+    async createNewComment(@Arg("data") newComment: CreateCommentInput) {
         const comment = new Comment();
         comment.id = newComment.id;
         comment.name = newComment.name;
         comment.comment = newComment.comment;
         comment.repoId = newComment.repoId;
+
+        const error = await validate(comment);
+        if (error.length > 0) throw new Error(`Validation Error: ${error}`);
+
+        await comment.save();
+        return comment;
+    }
+
+    @Mutation(() => Comment)
+    async updateComment(@Arg("id") id: number, @Arg("data") data: UpdateCommentInput) {
+        const comment = await Comment.findOneOrFail({ where: { id } });
+        if (!comment) throw new Error("Comment not found!");
+        const error = await validate(comment);
+        if (error.length > 0) throw new Error(`Validation Error: ${error}`);
+        Object.assign(comment, data);
         await comment.save();
         return comment;
     }

@@ -1,4 +1,4 @@
-import { IsBoolean, IsString, Max, Min } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsString, Length, Max, Min } from "class-validator";
 import { PrimaryColumn, Entity, Column, BaseEntity, ManyToOne, ManyToMany, JoinTable } from "typeorm";
 import { Status } from "../status/status.entity";
 import { Lang } from "../lang/lang.entity";
@@ -14,12 +14,16 @@ export class Repo extends BaseEntity {
 
     @Field(() => String)
     @Column({ type: "varchar", width: 100 })
+    @IsNotEmpty()
     @IsString()
+    @Length(1, 100)
     name: string;
 
     @Field(() => String)
     @Column({ type: "varchar", width: 100 })
+    @IsNotEmpty()
     @IsString()
+    @Length(5, 100)
     url: string;
 
     @Field(() => Boolean)
