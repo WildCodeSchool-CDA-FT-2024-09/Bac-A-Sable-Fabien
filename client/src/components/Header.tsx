@@ -1,24 +1,25 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Lang } from "../types/langType";
 import { useEffect, useState } from "react";
-import axiosInstance from "../services/connection";
+import { useQuery, gql } from "@apollo/client";
+
+const GET_LANGS = gql`
+  query GetLangs {
+    getLangs {
+      id
+      label
+    }
+  }
+`;
 
 const Header = () => {
-  const [langs, setlangs] = useState<Lang[]>([]);
+  const { loading, error, data } = useQuery(GET_LANGS);
+
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchLangs = async () => {
-      try {
-        const langs = await axiosInstance.get<Lang[]>("/api/langs");
-        setlangs(langs.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchLangs();
-  }, [langs]);
+  if (loading) return <p>🥁 Loading...</p>;
+  if (error) return <p>☠️ Error: {error.message}</p>;
 
   const handleLangFilter = (lg: Lang) => {
     setSearch("");
@@ -27,11 +28,11 @@ const Header = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setlangs([]);
+    // setlangs([]);
     navigate(`/?name=${search}`);
   };
 
-  const handleReset = (e) => {
+  const handleReset = () => {
     setSearch("");
     navigate("/");
   };
@@ -61,8 +62,8 @@ const Header = () => {
         {search && <p>Your current search: {search}</p>}
       </div>
       <nav className="w-full flex flex-row justify-between my-4">
-        {langs.length ? (
-          langs.map((lg: Lang) => (
+        {data.getLangs.length ? (
+          data.getLangs.map((lg: Lang) => (
             <button onClick={() => handleLangFilter(lg)} key={lg.id}>
               {lg.label}
             </button>

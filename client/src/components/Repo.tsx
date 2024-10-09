@@ -1,78 +1,75 @@
 import { useParams } from "react-router-dom";
-import { Repo as RepoType } from "../types/repoType";
-import { useEffect, useState } from "react";
-import axiosInstance from "../services/connection";
+import { useQuery, gql } from "@apollo/client";
 import Comments from "./Comments";
+import { Lang } from "../types/langType";
+import FavoriteButton from "./FavoriteButton";
+
+const GET_REPO = gql`
+  query GetRepo($repoId: String!) {
+    getRepo(id: $repoId) {
+      id
+      name
+      url
+      isFavorite
+      status {
+        label
+      }
+      langs {
+        id
+        label
+      }
+    }
+  }
+`;
 
 const Repo = () => {
-  const [repo, setRepo] = useState<RepoType>(null);
   const { repoId } = useParams();
+  const { loading, error, data } = useQuery(GET_REPO, {
+    variables: { repoId },
+  });
 
-  const handleLike = async () => {
-    try {
-      await axiosInstance.patch(`/api/repos/${repoId}`, {
-        isFavorite: !repo?.isFavorite,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchRepo = async () => {
-      try {
-        const repo = await axiosInstance.get<RepoType>(`/api/repos/${repoId}`);
-        setRepo(repo.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchRepo();
-  }, []);
+  if (loading) return <p>🥁 Loading...</p>;
+  if (error) return <p>☠️ Error: {error.message}</p>;
 
   return (
     <div id="repo">
-      {repo ? (
+      {data.getRepo ? (
         <div className="bg-slate-100 rounded-lg shadow-lg p-2 mb-2">
           <h2 className="font-bold text-3xl pb-4">
-            {repo.name}
+            {data.getRepo.name}
             <span
               className={`${
-                repo.status.label === "private" ? "bg-red-400" : "bg-green-400"
+                data.getRepo.status.label === "private"
+                  ? "bg-red-400"
+                  : "bg-green-400"
               } rounded px-1 ml-2 text-sm`}
             >
-              {repo.status.label}
+              {data.getRepo.status.label}
             </span>
           </h2>
-          <button
-            className="rounded px-1 ml-2 text-sm font-normal bg-red-400 text-white"
-            type="button"
-            onClick={handleLike}
-          >
-            Like
-          </button>
+          <FavoriteButton repo={data.getRepo} />
 
-          {repo.url && (
+          {data.getRepo.url && (
             <p className="pb-4">
-              <a target="_blank" href={repo.url}>
-                Project URL: {repo.url}
+              <a target="_blank" href={data.getRepo.url}>
+                Project URL: {data.getRepo.url}
               </a>
             </p>
           )}
 
-          {repo.langs.length > 0 && (
+          {data.getRepo.langs.length > 0 && (
             <div className="mb-4">
               <p>Languages:</p>
               <ul>
-                {repo.langs.map((lang) => (
+                {data.getRepo.langs.map((lang: Lang) => (
                   <li className="list-disc ml-5" key={lang.id}>
-                    {lang.label}
+                    {lang.label} {lang.id}
                   </li>
                 ))}
               </ul>
             </div>
           )}
-          <Comments repoId={repoId} />
+          <Comments repoId={repoId!} />
         </div>
       ) : (
         <p>Loading...</p>
