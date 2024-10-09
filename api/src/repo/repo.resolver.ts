@@ -71,6 +71,15 @@ export default class RepoResolver {
         return myRepo;
     }
 
+    @Mutation(() => Repo)
+    async toggleFavoriteRepo(@Arg("id") id: string) {
+        const repo = await Repo.findOneOrFail({ where: { id } });
+        if (!repo) throw new Error("Repository not found!");
+        repo.isFavorite = !repo.isFavorite;
+        await repo.save();
+        return repo;
+    }
+
     @Mutation(() => Boolean)
     async deleteRepo(@Arg("id") id: string) {
         const repo = await Repo.findOneBy({ id });
