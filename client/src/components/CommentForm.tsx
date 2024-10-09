@@ -12,7 +12,7 @@ const CREATE_NEW_COMMENT = gql`
   }
 `;
 
-const GET_COMMENTS = gql`
+const GET_COMMENTS_OF_REPO = gql`
   query GetCommentsOfRepo($repoId: String!) {
     getCommentsOfRepo(repoId: $repoId) {
       id
@@ -27,7 +27,7 @@ const CommentForm = ({ repoId }: { repoId: string }) => {
   const [name, setName] = useState<string>("");
   const [comment, setComment] = useState<string>("");
   const [createNewComment] = useMutation(CREATE_NEW_COMMENT, {
-    refetchQueries: [GET_COMMENTS, "getCommentsOfRepo"],
+    refetchQueries: [GET_COMMENTS_OF_REPO, "getCommentsOfRepo"],
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
