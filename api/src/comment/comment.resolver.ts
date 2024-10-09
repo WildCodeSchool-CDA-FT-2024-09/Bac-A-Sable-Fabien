@@ -83,10 +83,8 @@ export default class CommentResolver {
     @Mutation(() => Boolean)
     async deleteComment(@Arg("id") id: number) {
         const comment = await Comment.findOneBy({ id });
-        if (comment !== null) {
-            await comment.remove();
-            return true;
-        }
-        return false;
+        if (!comment) throw Error("Comment not found!");
+        await comment.remove();
+        return true;
     }
 }

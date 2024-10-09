@@ -38,7 +38,8 @@ export default class RepoResolver {
                 id: id.toString()
             },
             relations: {
-                status: true
+                status: true,
+                langs: true
             }
         });
     }
@@ -53,6 +54,8 @@ export default class RepoResolver {
         const status = await Status.findOneOrFail({
             where: { id: +newRepo.isPrivate },
         });
+        console.log(+newRepo.isPrivate, status);
+
         repo.status = status;
 
         const error = await validate(repo);
