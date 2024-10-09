@@ -2,6 +2,7 @@ import { Repo } from "./repo.entity";
 import { Status } from "../status/status.entity";
 import { Arg, Field, InputType, Mutation, Query, Resolver } from 'type-graphql';
 import { validate } from "class-validator";
+import { Like } from "typeorm";
 
 @InputType()
 class RepoInput implements Partial<Repo> {
@@ -23,6 +24,24 @@ export default class RepoResolver {
     @Query(() => [Repo])
     async getRepos() {
         const repos = await Repo.find({
+            relations: {
+                status: true,
+                langs: true
+            }
+        });
+        return repos;
+    }
+
+    @Query(() => [Repo])
+    async getFilteredRepos(@Arg("lang") lang: String) {
+        const repos = await Repo.find({
+            where: [
+                {
+                    langs: {
+                        label: Like(`%${lang}%`)
+                    }
+                },
+            ],
             relations: {
                 status: true,
                 langs: true
