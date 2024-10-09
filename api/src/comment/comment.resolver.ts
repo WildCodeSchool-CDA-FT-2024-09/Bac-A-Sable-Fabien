@@ -4,8 +4,8 @@ import { validate } from "class-validator";
 
 @InputType()
 class CreateCommentInput {
-    @Field()
-    id: number;
+    // @Field()
+    // id: number;
 
     @Field()
     name: string;
@@ -57,7 +57,6 @@ export default class CommentResolver {
     @Mutation(() => Comment)
     async createNewComment(@Arg("data") newComment: CreateCommentInput) {
         const comment = new Comment();
-        comment.id = newComment.id;
         comment.name = newComment.name;
         comment.comment = newComment.comment;
         comment.repoId = newComment.repoId;
