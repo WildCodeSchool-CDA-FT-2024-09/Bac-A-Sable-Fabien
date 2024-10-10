@@ -33,21 +33,43 @@ export default class RepoResolver {
     }
 
     @Query(() => [Repo])
-    async getFilteredRepos(@Arg("lang") lang: String) {
-        const repos = await Repo.find({
-            where: [
-                {
-                    langs: {
-                        label: Like(`%${lang}%`)
+    async getFilteredRepos(@Arg("lang", { nullable: true }) lang: String, @Arg("name", { nullable: true }) name: String) {
+        if (name) {
+            return await Repo.find({
+                where: [
+                    { name: Like(`%${name}%`) },
+                    {
+                        langs: {
+                            label: `${lang}`
+                        }
                     }
-                },
-            ],
+                ],
+                relations: {
+                    status: true,
+                    langs: true
+                }
+            });
+        } else if (lang) {
+            return await Repo.find({
+                where: [
+                    {
+                        langs: {
+                            label: `${lang}`
+                        }
+                    }
+                ],
+                relations: {
+                    status: true,
+                    langs: true
+                }
+            });
+        }
+        return await Repo.find({
             relations: {
                 status: true,
                 langs: true
             }
         });
-        return repos;
     }
 
     @Query(() => Repo)
