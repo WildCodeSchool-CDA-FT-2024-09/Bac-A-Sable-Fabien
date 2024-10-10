@@ -6,7 +6,7 @@ import FavoriteButton from "./FavoriteButton";
 const RepoCard = ({ repo }: { repo: Repo }) => {
   return (
     <div
-      className="bg-white hover:bg-gray-300 p-4 rounded-md shadow-md"
+      className="bg-white hover:bg-gradient-to-br hover:from-gray-100 hover:to-gray-300 p-4 rounded-md shadow-md"
       key={repo?.id}
     >
       <h3 className="font-bold text-2xl mb-1">

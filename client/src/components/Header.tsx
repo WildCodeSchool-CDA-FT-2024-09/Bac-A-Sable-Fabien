@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Lang } from "../types/langType";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 
 const GET_LANGS = gql`
@@ -28,7 +28,6 @@ const Header = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // setlangs([]);
     navigate(`/?name=${search}`);
   };
 
@@ -37,12 +36,18 @@ const Header = () => {
     navigate("/");
   };
 
+  const cleanFilters = () => {
+    setSearch("");
+  };
+
   return (
     <header className="flex flex-col items-center">
       <h1 className="text-3xl font-bold my-4">
-        <Link to="/">My Repositories</Link>
+        <Link to="/" onClick={cleanFilters}>
+          🦊 My Repositories
+        </Link>
       </h1>
-      <div className="mb-4 flex justify-center items-center gap-4">
+      <div className="mb-4 flex justify-center items-center gap-4 p-1 rounded-md border-gray-300 border bg-gray-300">
         <form action="" onSubmit={handleSearch}>
           <input
             type="text"
@@ -55,11 +60,18 @@ const Header = () => {
           />
         </form>
         {search && (
-          <button className="" onClick={handleReset}>
-            &times;
-          </button>
+          <div className="flex gap-x-2">
+            <p>
+              Current search: <strong>{search}</strong>
+            </p>
+            <button
+              className="text-red-500 font-bold mr-1"
+              onClick={handleReset}
+            >
+              &times;
+            </button>
+          </div>
         )}
-        {search && <p>Your current search: {search}</p>}
       </div>
       <nav className="w-full flex flex-row justify-between my-4">
         {data.getLangs.length ? (

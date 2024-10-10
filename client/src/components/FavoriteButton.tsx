@@ -23,7 +23,7 @@ const FavoriteButton = ({ repo }: { repo: Repo }) => {
 
   return (
     <button
-      className={`rounded px-1 ml-2 text-sm font-normal ${
+      className={`float-end rounded px-1 ml-2 text-sm font-normal ${
         fave ? "bg-red-400 text-white" : "bg-gray-200 text-gray-400"
       }`}
       type="button"

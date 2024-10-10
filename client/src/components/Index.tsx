@@ -3,27 +3,9 @@ import { Repo } from "../types/repoType";
 import RepoCard from "./RepoCard";
 import { useSearchParams } from "react-router-dom";
 
-// const GET_REPOS = gql`
-//   query GetRepos {
-//     getRepos {
-//       id
-//       name
-//       url
-//       isFavorite
-//       langs {
-//         id
-//         label
-//       }
-//       status {
-//         label
-//       }
-//     }
-//   }
-// `;
-
 const GET_FILTERED_REPOS = gql`
-  query GetFilteredRepos($lang: String!) {
-    getFilteredRepos(lang: $lang) {
+  query GetFilteredRepos($lang: String, $name: String) {
+    getFilteredRepos(lang: $lang, name: $name) {
       id
       name
       url
@@ -42,16 +24,12 @@ const GET_FILTERED_REPOS = gql`
 
 const Index = () => {
   const [searchParams] = useSearchParams();
-
-  console.log(searchParams.get("lang"));
-
-  // const searchName = searchParams.get("name") ? searchParams.get("name") : "";
-  const searchLang = searchParams.get("lang") ? searchParams.get("lang") : "";
-  console.log(searchLang);
+  const searchName = searchParams.get("name") ? searchParams.get("name") : null;
+  const searchLang = searchParams.get("lang") ? searchParams.get("lang") : null;
 
   const { loading, error, data } = useQuery(GET_FILTERED_REPOS, {
     variables: {
-      // name: searchName,
+      name: searchName,
       lang: searchLang,
     },
     onCompleted: (data) => {
