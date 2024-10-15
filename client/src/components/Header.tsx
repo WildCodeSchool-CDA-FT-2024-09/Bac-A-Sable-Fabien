@@ -1,19 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Lang } from "../types/langType";
 import { useState } from "react";
-import { useQuery, gql } from "@apollo/client";
-
-const GET_LANGS = gql`
-  query GetLangs {
-    getLangs {
-      id
-      label
-    }
-  }
-`;
+import { useGetLangsQuery, Lang } from "../generated/graphql-types";
 
 const Header = () => {
-  const { loading, error, data } = useQuery(GET_LANGS);
+  const { loading, error, data } = useGetLangsQuery();
 
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
@@ -26,7 +16,7 @@ const Header = () => {
     navigate(`/?lang=${lg.label}`);
   };
 
-  const handleSearch = (e) => {
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     navigate(`/?name=${search}`);
   };
@@ -48,7 +38,7 @@ const Header = () => {
         </Link>
       </h1>
       <div className="mb-4 flex justify-center items-center gap-4 p-1 rounded-md border-gray-300 border bg-gray-300">
-        <form action="" onSubmit={handleSearch}>
+        <form action="" onSubmit={handleSearchSubmit}>
           <input
             type="text"
             name="search"
@@ -74,9 +64,13 @@ const Header = () => {
         )}
       </div>
       <nav className="w-full flex flex-row justify-between my-4">
-        {data.getLangs.length ? (
+        {data && data.getLangs.length ? (
           data.getLangs.map((lg: Lang) => (
-            <button onClick={() => handleLangFilter(lg)} key={lg.id}>
+            <button
+              className="border border-gray-300 hover:border-gray-300 hover:bg-gray-300 rounded px-1"
+              onClick={() => handleLangFilter(lg)}
+              key={lg.id}
+            >
               {lg.label}
             </button>
           ))

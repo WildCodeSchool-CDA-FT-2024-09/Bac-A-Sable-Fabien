@@ -1,20 +1,12 @@
-import { gql, useMutation } from "@apollo/client";
-import { Repo } from "../types/repoType";
 import { useState } from "react";
-
-const TOGGLE_FAVORITE = gql`
-  mutation ToggleFavoriteRepo($toggleFavoriteRepoId: String!) {
-    toggleFavoriteRepo(id: $toggleFavoriteRepoId) {
-      name
-      url
-      isFavorite
-    }
-  }
-`;
+import {
+  useToggleFavoriteRepoMutation,
+  Repo,
+} from "../generated/graphql-types";
 
 const FavoriteButton = ({ repo }: { repo: Repo }) => {
-  const [fave, setFave] = useState(repo?.isFavorite);
-  const [toggleFavorite] = useMutation(TOGGLE_FAVORITE, {
+  const [fave, setFave] = useState<boolean | undefined>(repo?.isFavorite);
+  const [toggleFavorite] = useToggleFavoriteRepoMutation({
     variables: { toggleFavoriteRepoId: repo?.id },
     onCompleted: (data) => {
       setFave(data.toggleFavoriteRepo.isFavorite);
@@ -27,7 +19,7 @@ const FavoriteButton = ({ repo }: { repo: Repo }) => {
         fave ? "bg-red-400 text-white" : "bg-gray-200 text-gray-400"
       }`}
       type="button"
-      onClick={toggleFavorite}
+      onClick={() => toggleFavorite()}
     >
       {fave ? "Liked" : "Like"}
     </button>

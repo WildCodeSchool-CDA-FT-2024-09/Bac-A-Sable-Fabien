@@ -1,30 +1,11 @@
 import { useParams } from "react-router-dom";
-import { useQuery, gql } from "@apollo/client";
 import Comments from "./Comments";
-import { Lang } from "../types/langType";
 import FavoriteButton from "./FavoriteButton";
-
-const GET_REPO = gql`
-  query GetRepo($repoId: String!) {
-    getRepo(id: $repoId) {
-      id
-      name
-      url
-      isFavorite
-      status {
-        label
-      }
-      langs {
-        id
-        label
-      }
-    }
-  }
-`;
+import { useGetRepoQuery, Lang } from "../generated/graphql-types";
 
 const Repo = () => {
   const { repoId } = useParams();
-  const { loading, error, data } = useQuery(GET_REPO, {
+  const { loading, error, data } = useGetRepoQuery({
     variables: { repoId },
   });
 
@@ -33,7 +14,7 @@ const Repo = () => {
 
   return (
     <div id="repo">
-      {data.getRepo ? (
+      {data && data.getRepo ? (
         <div className="bg-slate-100 rounded-lg shadow-lg p-2 mb-2">
           <h2 className="font-bold text-3xl pb-4">
             {data.getRepo.name}

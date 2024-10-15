@@ -1,33 +1,14 @@
 import { useState } from "react";
-import { gql, useMutation } from "@apollo/client";
-
-const CREATE_NEW_COMMENT = gql`
-  mutation CreateNewComment($data: CreateCommentInput!) {
-    createNewComment(data: $data) {
-      comment
-      id
-      name
-      repoId
-    }
-  }
-`;
-
-const GET_COMMENTS_OF_REPO = gql`
-  query GetCommentsOfRepo($repoId: String!) {
-    getCommentsOfRepo(repoId: $repoId) {
-      id
-      repoId
-      name
-      comment
-    }
-  }
-`;
+import {
+  useCreateNewCommentMutation,
+  namedOperations,
+} from "../generated/graphql-types";
 
 const CommentForm = ({ repoId }: { repoId: string }) => {
   const [name, setName] = useState<string>("");
   const [comment, setComment] = useState<string>("");
-  const [createNewComment] = useMutation(CREATE_NEW_COMMENT, {
-    refetchQueries: [GET_COMMENTS_OF_REPO, "getCommentsOfRepo"],
+  const [createNewComment] = useCreateNewCommentMutation({
+    refetchQueries: [namedOperations.Query.GetCommentsOfRepo],
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

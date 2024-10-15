@@ -482,3 +482,16 @@ export type GetCommentsOfRepoQueryHookResult = ReturnType<typeof useGetCommentsO
 export type GetCommentsOfRepoLazyQueryHookResult = ReturnType<typeof useGetCommentsOfRepoLazyQuery>;
 export type GetCommentsOfRepoSuspenseQueryHookResult = ReturnType<typeof useGetCommentsOfRepoSuspenseQuery>;
 export type GetCommentsOfRepoQueryResult = Apollo.QueryResult<GetCommentsOfRepoQuery, GetCommentsOfRepoQueryVariables>;
+export const namedOperations = {
+  Query: {
+    GetLangs: 'GetLangs',
+    GetFilteredRepos: 'GetFilteredRepos',
+    GetRepo: 'GetRepo',
+    GetCommentsOfRepo: 'GetCommentsOfRepo'
+  },
+  Mutation: {
+    ToggleFavoriteRepo: 'ToggleFavoriteRepo',
+    CreateNewComment: 'CreateNewComment',
+    DeleteComment: 'DeleteComment'
+  }
+}

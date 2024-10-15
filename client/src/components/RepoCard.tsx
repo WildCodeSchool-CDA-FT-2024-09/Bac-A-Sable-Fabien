@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
-import { Lang } from "../types/langType";
-import { Repo } from "../types/repoType";
 import FavoriteButton from "./FavoriteButton";
+import { Lang, Repo } from "../generated/graphql-types";
 
 const RepoCard = ({ repo }: { repo: Repo }) => {
   return (
