@@ -23,8 +23,13 @@ import status from "../../data/status.json";
     await queryRunner.query("DELETE FROM lang CASCADE");
     await queryRunner.query("DELETE FROM repo CASCADE");
     await queryRunner.query("DELETE FROM status CASCADE");
+    console.log("Delete tables DONE");
 
-    console.log("Truncate DONE");
+    await queryRunner.query(`ALTER SEQUENCE lang_id_seq RESTART WITH 1;`);
+    await queryRunner.query(`ALTER SEQUENCE status_id_seq RESTART WITH 1;`);
+    await queryRunner.query(`ALTER SEQUENCE comment_id_seq RESTART WITH 1;`);
+    console.log("Alter sequence DONE");
+
     await queryRunner.commitTransaction();
 
     // langs
