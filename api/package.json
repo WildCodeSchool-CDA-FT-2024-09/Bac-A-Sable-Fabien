@@ -9,7 +9,8 @@
     "create": "ts-node-dev ./data/create.ts",
     "seed": "ts-node-dev ./src/database/seed.ts",
     "dev": "ts-node-dev ./src/server.ts",
-    "full": "gh repo list feub --json  id,name,url,languages,isPrivate > ./data/raw.json && ts-node-dev ./data/create.ts && ts-node-dev ./src/database/seed.ts && ts-node-dev ./src/server.ts"
+    "fullx": "gh repo list feub --json  id,name,url,languages,isPrivate > ./data/raw.json && ts-node-dev ./data/create.ts && ts-node-dev ./src/database/seed.ts && ts-node-dev ./src/server.ts",
+    "full": "ts-node-dev ./src/database/seed.ts && ts-node-dev ./src/server.ts"
   },
   "keywords": [],
   "author": "",
