@@ -6,14 +6,14 @@ import { Status } from "../status/status.entity";
 import { Comment } from "../comment/comment.entity";
 
 dotenv.config();
-const { DATABASE_FILE } = process.env;
 
 export const AppDataSource = new DataSource({
-    type: "sqlite",
-    database: `${DATABASE_FILE}`,
-    synchronize: true, // /!\ only in dev
-    logging: false,
-    entities: [Lang, Repo, Status, Comment],
-    migrations: [],
-    subscribers: [],
+  type: "postgres",
+  host: "db",
+  port: 5432,
+  username: "postgres",
+  password: "password",
+  database: "postgres",
+  entities: [Lang, Repo, Status, Comment],
+  synchronize: true, // /!\ only in dev
 });
