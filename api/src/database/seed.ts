@@ -32,6 +32,8 @@ import status from "../../data/status.json";
 
     await queryRunner.commitTransaction();
 
+    await queryRunner.startTransaction();
+
     // langs
     const seedLangs = await Promise.all(
       langs.map(async (el) => {
@@ -83,7 +85,7 @@ import status from "../../data/status.json";
     );
     console.log(seedRepos);
 
-    // await queryRunner.commitTransaction();
+    await queryRunner.commitTransaction();
   } catch (error) {
     console.error(error);
     await queryRunner.rollbackTransaction();
