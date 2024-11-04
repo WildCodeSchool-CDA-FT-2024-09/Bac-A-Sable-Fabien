@@ -5,9 +5,9 @@ import {
 } from "../generated/graphql-types";
 
 const FavoriteButton = ({ repo }: { repo: Repo }) => {
-  const [fave, setFave] = useState<boolean | undefined>(repo?.isFavorite);
+  const [fave, setFave] = useState<boolean | undefined>(repo.isFavorite);
   const [toggleFavorite] = useToggleFavoriteRepoMutation({
-    variables: { toggleFavoriteRepoId: repo?.id },
+    variables: { toggleFavoriteRepoId: repo.id },
     onCompleted: (data) => {
       setFave(data.toggleFavoriteRepo.isFavorite);
     },

@@ -36,6 +36,7 @@ export const GET_REPO = gql`
       url
       isFavorite
       status {
+        id
         label
       }
       langs {

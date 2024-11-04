@@ -1,12 +1,16 @@
 import { useParams } from "react-router-dom";
 import Comments from "./Comments";
 import FavoriteButton from "./FavoriteButton";
-import { useGetRepoQuery, Lang } from "../generated/graphql-types";
+import {
+  useGetRepoQuery,
+  Lang,
+  GetRepoQueryVariables,
+} from "../generated/graphql-types";
 
 const Repo = () => {
-  const { repoId } = useParams();
+  const { repoId } = useParams<string>();
   const { loading, error, data } = useGetRepoQuery({
-    variables: { repoId },
+    variables: { repoId } as GetRepoQueryVariables,
   });
 
   if (loading) return <p>🥁 Loading...</p>;
