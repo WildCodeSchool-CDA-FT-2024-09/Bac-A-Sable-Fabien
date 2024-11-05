@@ -185,7 +185,7 @@ export type GetRepoQueryVariables = Exact<{
 }>;
 
 
-export type GetRepoQuery = { __typename?: 'Query', getRepo: { __typename?: 'Repo', id: string, name: string, url: string, isFavorite: boolean, status: { __typename?: 'Status', label: string }, langs: Array<{ __typename?: 'Lang', id: number, label: string }> } };
+export type GetRepoQuery = { __typename?: 'Query', getRepo: { __typename?: 'Repo', id: string, name: string, url: string, isFavorite: boolean, status: { __typename?: 'Status', id: number, label: string }, langs: Array<{ __typename?: 'Lang', id: number, label: string }> } };
 
 export type GetCommentsOfRepoQueryVariables = Exact<{
   repoId: Scalars['String']['input'];
@@ -397,6 +397,7 @@ export const GetRepoDocument = gql`
     url
     isFavorite
     status {
+      id
       label
     }
     langs {
