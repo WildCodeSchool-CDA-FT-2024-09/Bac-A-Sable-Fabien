@@ -21,8 +21,6 @@ services:
 
   api:
     build: ./api
-    #ports:
-    #  - 4000:4000
     command: npm run full
     restart: always
     environment:
@@ -37,8 +35,6 @@ services:
     build: ./client
     command: npm run dev
     restart: always
-    #ports:
-    #  - 5173:5173
     environment:
       - VITE_API_URL=http://localhost:7000/graph
     volumes:
