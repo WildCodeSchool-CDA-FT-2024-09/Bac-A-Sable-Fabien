@@ -8,6 +8,7 @@ import RepoResolver from "./repo/repo.resolver";
 import StatusResolver from "./status/status.resolver";
 import LangResolver from "./lang/lang.resolver";
 import CommentResolver from "./comment/comment.resolver";
+import UserResolver from "./user/user.resolver";
 
 dotenv.config();
 const { PORT } = process.env;
@@ -16,7 +17,13 @@ const { PORT } = process.env;
   await AppDataSource.initialize();
 
   const schema = await buildSchema({
-    resolvers: [StatusResolver, RepoResolver, LangResolver, CommentResolver],
+    resolvers: [
+      StatusResolver,
+      RepoResolver,
+      LangResolver,
+      CommentResolver,
+      UserResolver,
+    ],
   });
 
   const server = new ApolloServer({
@@ -25,7 +32,11 @@ const { PORT } = process.env;
 
   const { url } = await startStandaloneServer(server, {
     listen: { port: Number(PORT) },
+    context: async ({ req, res }) => {
+      console.log(req.httpVersion);
+      return { res };
+    },
   });
 
-  console.log(`🚀 Server ready at: ${url}`);
+  console.log(`🚀 Dockerized server ready at: ${url}`);
 })();

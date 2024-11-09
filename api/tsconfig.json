@@ -1,25 +1,25 @@
 {
-    "compilerOptions": {
-      "target": "ES2020",                        // Target modern JavaScript for async/await and other features
-      "module": "CommonJS",                      // Node.js uses CommonJS module system
-      "moduleResolution": "node",                // Resolve modules like Node.js does
-      "outDir": "./dist",                        // Redirect compiled files to the 'dist' directory
-      "rootDir": "./src",                        // Your source files are under the 'src' directory
-      "strict": true,                            // Enable strict type-checking options
-      "esModuleInterop": true,                   // Handle default imports from CommonJS modules
-      "skipLibCheck": true,                      // Skip type checking for declaration files (.d.ts)
-      "forceConsistentCasingInFileNames": true,  // Ensure consistent casing in file imports
-      "resolveJsonModule": true,                 // Allows importing JSON files
-      "noImplicitAny": true,                     // Ensure all variables are explicitly typed
-      "noImplicitReturns": true,                 // Ensure functions always return a value
-      "noUnusedLocals": true,                    // Warn on unused local variables
-      "noUnusedParameters": true,                // Warn on unused function parameters
-      "sourceMap": true,                         // Generate source maps for debugging
-      "incremental": true,                       // Enable incremental compilation for faster builds
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
-      "strictPropertyInitialization": false
-    },
-    "include": ["./src/**/*.ts", "src/database/seed.js", "src/database/scrap.js"],                  // Include all .ts files in the src folder
-    "exclude": ["node_modules"]          // Exclude unnecessary files from the compilation process
-  }
+  "compilerOptions": {
+    "target": "ES2020", // Target modern JavaScript for async/await and other features
+    "module": "CommonJS", // Node.js uses CommonJS module system
+    "moduleResolution": "node", // Resolve modules like Node.js does
+    "outDir": "./dist", // Redirect compiled files to the 'dist' directory
+    "rootDir": "./src", // Your source files are under the 'src' directory
+    "strict": true, // Enable strict type-checking options
+    "esModuleInterop": true, // Handle default imports from CommonJS modules
+    "skipLibCheck": true, // Skip type checking for declaration files (.d.ts)
+    "forceConsistentCasingInFileNames": true, // Ensure consistent casing in file imports
+    "resolveJsonModule": true, // Allows importing JSON files
+    "noImplicitAny": true, // Ensure all variables are explicitly typed
+    "noImplicitReturns": true, // Ensure functions always return a value
+    "noUnusedLocals": true, // Warn on unused local variables
+    "noUnusedParameters": true, // Warn on unused function parameters
+    "sourceMap": true, // Generate source maps for debugging
+    "incremental": true, // Enable incremental compilation for faster builds
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false
+  },
+  "include": ["./src/**/*.ts", "src/database/seed.js", "src/database/scrap.js"], // Include all .ts files in the src folder
+  "exclude": ["node_modules"] // Exclude unnecessary files from the compilation process
+}

@@ -42,7 +42,7 @@ import status from "../../data/status.json";
         return await lng.save();
       }),
     );
-    console.log(seedLangs);
+    console.log("Langs seeded");
 
     // status
     const seedStatus = await Promise.all(
@@ -52,10 +52,10 @@ import status from "../../data/status.json";
         return await stat.save();
       }),
     );
-    console.log(seedStatus);
+    console.log("Statuses seeded");
 
     // repos
-    const seedRepos = await Promise.all(
+    await Promise.all(
       repos.map(async (el) => {
         const repo = new Repo();
         repo.id = el.id;
@@ -83,7 +83,7 @@ import status from "../../data/status.json";
         return await repo.save();
       }),
     );
-    console.log(seedRepos);
+    console.log("Repos seeded");
 
     await queryRunner.commitTransaction();
   } catch (error) {
