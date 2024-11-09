@@ -13,7 +13,6 @@ const me = {
   email: "f@feub.net",
   passwordHash: hashMe("argon2hash"),
 };
-console.log(me);
 
 @Resolver()
 export default class UserResolver {
@@ -33,6 +32,7 @@ export default class UserResolver {
             {
               email: me.email,
               name: "fabien",
+              role: "admin",
             },
             AUTH_SECRET_KEY as string,
           );

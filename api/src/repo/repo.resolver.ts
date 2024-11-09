@@ -1,6 +1,14 @@
 import { Repo } from "./repo.entity";
 import { Status } from "../status/status.entity";
-import { Arg, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Authorized,
+  Field,
+  InputType,
+  Mutation,
+  Query,
+  Resolver,
+} from "type-graphql";
 import { validate } from "class-validator";
 import { Like } from "typeorm";
 
@@ -21,6 +29,7 @@ class RepoInput implements Partial<Repo> {
 
 @Resolver(Repo)
 export default class RepoResolver {
+  @Authorized("admin")
   @Query(() => [Repo])
   async getRepos() {
     const repos = await Repo.find({
@@ -32,6 +41,7 @@ export default class RepoResolver {
     return repos;
   }
 
+  @Authorized("admin")
   @Query(() => [Repo])
   async getFilteredRepos(
     @Arg("lang", { nullable: true }) lang: String,

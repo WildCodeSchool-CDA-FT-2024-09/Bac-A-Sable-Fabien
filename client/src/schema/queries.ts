@@ -57,3 +57,9 @@ export const GET_COMMENTS_OF_REPO = gql`
     }
   }
 `;
+
+export const LOGIN = gql`
+  query Login($password: String!, $email: String!) {
+    login(password: $password, email: $email)
+  }
+`;
