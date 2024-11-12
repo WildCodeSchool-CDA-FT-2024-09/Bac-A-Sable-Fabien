@@ -4,6 +4,7 @@ import { Lang } from "../lang/lang.entity";
 import { Repo } from "../repo/repo.entity";
 import { Status } from "../status/status.entity";
 import { Comment } from "../comment/comment.entity";
+import { User } from "../user/user.entity";
 
 dotenv.config();
 const { POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_USER, POSTGRES_HOST } =
@@ -16,6 +17,6 @@ export const AppDataSource = new DataSource({
   username: POSTGRES_USER,
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DB,
-  entities: [Lang, Repo, Status, Comment],
+  entities: [Lang, Repo, Status, Comment, User],
   synchronize: true, // /!\ only in dev
 });

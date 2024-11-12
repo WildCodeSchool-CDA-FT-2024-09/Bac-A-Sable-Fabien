@@ -8,6 +8,7 @@ import ErrorPage from "./pages/ErrorPage";
 import Repo from "./components/Repo";
 import Index from "./components/Index";
 import client from "./services/connection";
+import Login from "./pages/Login";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
         element: <Repo />,
       },
     ],
+  },
+  {
+    path: "login",
+    element: <Login />,
   },
 ]);
 

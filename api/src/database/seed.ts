@@ -1,4 +1,5 @@
 import { AppDataSource } from "../database/data-source";
+import argon2 from "argon2";
 import { Repo } from "../repo/repo.entity";
 import repos from "../../data/repo.json";
 import lang_by_repos from "../../data/lang_by_repo.json";
@@ -6,6 +7,8 @@ import { Lang } from "../lang/lang.entity";
 import langs from "../../data/langs.json";
 import { Status } from "../status/status.entity";
 import status from "../../data/status.json";
+import { User } from "../user/user.entity";
+import user from "../../data/user.json";
 
 (async () => {
   // initializing data source
@@ -23,16 +26,31 @@ import status from "../../data/status.json";
     await queryRunner.query("DELETE FROM lang CASCADE");
     await queryRunner.query("DELETE FROM repo CASCADE");
     await queryRunner.query("DELETE FROM status CASCADE");
+    await queryRunner.query('DELETE FROM "user" CASCADE');
     console.log("Delete tables DONE");
 
     await queryRunner.query(`ALTER SEQUENCE lang_id_seq RESTART WITH 1;`);
     await queryRunner.query(`ALTER SEQUENCE status_id_seq RESTART WITH 1;`);
     await queryRunner.query(`ALTER SEQUENCE comment_id_seq RESTART WITH 1;`);
+    await queryRunner.query(`ALTER SEQUENCE user_id_seq RESTART WITH 1;`);
     console.log("Alter sequence DONE");
 
     await queryRunner.commitTransaction();
 
     await queryRunner.startTransaction();
+
+    // users
+    await Promise.all(
+      user.map(async (el) => {
+        const user = new User();
+        user.email = el.email;
+        user.fullname = el.fullanme ? el.fullanme : "";
+        user.password = await argon2.hash(el.password);
+        user.role = el.role;
+        return await user.save();
+      }),
+    );
+    console.log("Users seeded");
 
     // langs
     const seedLangs = await Promise.all(

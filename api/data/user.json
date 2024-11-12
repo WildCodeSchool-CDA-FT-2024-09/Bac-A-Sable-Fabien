@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "email": "f@feub.net",
+    "fullanme": "Fabien feub",
+    "password": "argon2hash",
+    "role": 1
+  },
+  {
+    "id": 2,
+    "email": "toto@toto.net",
+    "fullname": "Toto",
+    "password": "argon2hash",
+    "role": 2
+  }
+]
