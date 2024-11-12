@@ -1,19 +1,22 @@
 import * as dotenv from "dotenv";
 import { DataSource } from "typeorm";
-import { Lang } from "../langs/lang.entity";
-import { Repo } from "../repos/repo.entity";
+import { Lang } from "../lang/lang.entity";
+import { Repo } from "../repo/repo.entity";
 import { Status } from "../status/status.entity";
-import { Comment } from "../comments/comment.entity";
+import { Comment } from "../comment/comment.entity";
+import { User } from "../user/user.entity";
 
 dotenv.config();
-const { DATABASE_FILE } = process.env;
+const { POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_USER, POSTGRES_HOST } =
+  process.env;
 
 export const AppDataSource = new DataSource({
-    type: "sqlite",
-    database: `${DATABASE_FILE}`,
-    synchronize: true, // /!\ only in dev
-    logging: false,
-    entities: [Lang, Repo, Status, Comment],
-    migrations: [],
-    subscribers: [],
+  type: "postgres",
+  host: POSTGRES_HOST,
+  port: 5432,
+  username: POSTGRES_USER,
+  password: POSTGRES_PASSWORD,
+  database: POSTGRES_DB,
+  entities: [Lang, Repo, Status, Comment, User],
+  synchronize: true, // /!\ only in dev
 });

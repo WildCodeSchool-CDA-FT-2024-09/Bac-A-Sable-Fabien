@@ -1,48 +1,44 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Lang } from "../types/langType";
-import { useEffect, useState } from "react";
-import axiosInstance from "../services/connection";
+import { useState } from "react";
+import { useGetLangsQuery, Lang } from "../generated/graphql-types";
 
 const Header = () => {
-  const [langs, setlangs] = useState<Lang[]>([]);
+  const { loading, error, data } = useGetLangsQuery();
+
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchLangs = async () => {
-      try {
-        const langs = await axiosInstance.get<Lang[]>("/api/langs");
-        setlangs(langs.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchLangs();
-  }, [langs]);
+  if (loading) return <p>🥁 Loading...</p>;
+  if (error) return <p>☠️ Error: {error.message}</p>;
 
   const handleLangFilter = (lg: Lang) => {
     setSearch("");
     navigate(`/?lang=${lg.label}`);
   };
 
-  const handleSearch = (e) => {
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setlangs([]);
     navigate(`/?name=${search}`);
   };
 
-  const handleReset = (e) => {
+  const handleReset = () => {
     setSearch("");
     navigate("/");
+  };
+
+  const cleanFilters = () => {
+    setSearch("");
   };
 
   return (
     <header className="flex flex-col items-center">
       <h1 className="text-3xl font-bold my-4">
-        <Link to="/">My Repositories</Link>
+        <Link to="/" onClick={cleanFilters}>
+          🦊 My Repositories
+        </Link>
       </h1>
-      <div className="mb-4 flex justify-center items-center gap-4">
-        <form action="" onSubmit={handleSearch}>
+      <div className="mb-4 flex justify-center items-center gap-4 p-1 rounded-md border-gray-300 border bg-gray-300">
+        <form action="" onSubmit={handleSearchSubmit}>
           <input
             type="text"
             name="search"
@@ -54,16 +50,27 @@ const Header = () => {
           />
         </form>
         {search && (
-          <button className="" onClick={handleReset}>
-            &times;
-          </button>
+          <div className="flex gap-x-2">
+            <p>
+              Current search: <strong>{search}</strong>
+            </p>
+            <button
+              className="text-red-500 font-bold mr-1"
+              onClick={handleReset}
+            >
+              &times;
+            </button>
+          </div>
         )}
-        {search && <p>Your current search: {search}</p>}
       </div>
       <nav className="w-full flex flex-row justify-between my-4">
-        {langs.length ? (
-          langs.map((lg: Lang) => (
-            <button onClick={() => handleLangFilter(lg)} key={lg.id}>
+        {data && data.getLangs.length ? (
+          data.getLangs.map((lg: Lang) => (
+            <button
+              className="border border-gray-300 hover:border-gray-300 hover:bg-gray-300 rounded px-1"
+              onClick={() => handleLangFilter(lg)}
+              key={lg.id}
+            >
               {lg.label}
             </button>
           ))

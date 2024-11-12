@@ -1,51 +1,31 @@
-import { useEffect, useState } from "react";
-import axiosInstance from "../services/connection";
-import { Repo } from "../types/repoType";
 import RepoCard from "./RepoCard";
 import { useSearchParams } from "react-router-dom";
+import { useGetFilteredReposQuery, Repo } from "../generated/graphql-types";
 
 const Index = () => {
-  const [repos, setRepos] = useState<Repo[]>([]);
   const [searchParams] = useSearchParams();
-  let searchQuery = "";
-  const searchLang =
-    searchParams.get("lang") !== null
-      ? "?lang=" + searchParams.get("lang")
-      : "";
-  const searchName =
-    searchParams.get("name") !== null ? "name=" + searchParams.get("name") : "";
-  if (searchLang !== "") {
-    if (searchName !== "") {
-      searchQuery += searchLang + "&" + searchName;
-    } else {
-      searchQuery += searchLang;
-    }
-  } else {
-    searchQuery += "?" + searchName;
-  }
+  const searchName = searchParams.get("name") ? searchParams.get("name") : null;
+  const searchLang = searchParams.get("lang") ? searchParams.get("lang") : null;
 
-  console.log(searchQuery);
+  const { loading, error, data } = useGetFilteredReposQuery({
+    variables: {
+      name: searchName,
+      lang: searchLang,
+    },
+    onCompleted: (data) => {
+      console.log(data);
+    },
+  });
 
-  useEffect(() => {
-    const fetchRepos = async () => {
-      try {
-        const repos = await axiosInstance.get<Repo[]>(
-          `/api/repos${searchQuery}`,
-        );
-        setRepos(repos.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchRepos();
-  }, [searchParams]);
+  if (loading) return <p>🥁 Loading...</p>;
+  if (error) return <p>☠️ Error: {error.message}</p>;
 
   return (
     <>
-      {repos.length ? (
+      {data && data.getFilteredRepos.length ? (
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {repos.map((repo: Repo) => (
-            <RepoCard key={repo?.id} repo={repo} />
+          {data.getFilteredRepos.map((repo: Repo) => (
+            <RepoCard key={repo.id} repo={repo} />
           ))}
         </div>
       ) : (
