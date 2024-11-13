@@ -3,7 +3,7 @@ name: Run All API TEST
 on:
   pull_request:
     branches:
-      - mock_test
+      - authorization
 
 jobs:
   tests-api:
