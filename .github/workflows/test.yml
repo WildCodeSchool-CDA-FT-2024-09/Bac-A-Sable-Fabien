@@ -10,6 +10,10 @@ jobs:
   tests-api:
     runs-on: ubuntu-latest
 
+    permissions:
+      checks: write
+      contents: write
+
     steps:
       - name: Step 1 Checkout git repo
         uses: actions/checkout@v4
