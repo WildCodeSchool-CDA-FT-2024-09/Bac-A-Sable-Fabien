@@ -41,7 +41,7 @@ export default class RepoResolver {
     return repos;
   }
 
-  @Authorized("admin")
+  // @Authorized("admin")
   @Query(() => [Repo])
   async getFilteredRepos(
     @Arg("lang", { nullable: true }) lang: String,
