@@ -27,10 +27,12 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ./node_modules
             ./api/node_modules
             ./client/node_modules
           key: ${{ runner.os }}-${{ hashfiles('**/package-lock.json') }}
 
       - name: Install package dependencies
         run: npm run fullinstall
+
+      - name: Run Unit tests
+        run: npm run test
