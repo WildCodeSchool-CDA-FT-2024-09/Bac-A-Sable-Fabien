@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo 'TODO install husky and run test'",
+    "test": "jest --config ./jest.config.ts",
+    "testhusky": "echo 'TODO install husky and run test'",
     "fetch": "gh repo list feub --json  id,name,url,languages,isPrivate > ./data/raw.json",
     "create": "ts-node-dev ./data/create.ts",
     "seed": "ts-node-dev ./src/database/seed.ts",
@@ -17,9 +18,13 @@
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.7.5",
     "@types/set-cookie-parser": "^2.4.10",
+    "graphql-tag": "^2.12.6",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.6.2"
   },

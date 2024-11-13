@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "fullinstall": "cd ./api && npm run test"
+    "fullinstall": "cd ./api && npm i && npm run test"
   }
 }

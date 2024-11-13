@@ -10,6 +10,13 @@ dotenv.config();
 const { POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_USER, POSTGRES_HOST } =
   process.env;
 
+// export const AppDataSource = new DataSource({
+//   type: "sqlite",
+//   database: `./src/database/database.db`,
+//   entities: [Repo, Status, Lang, Comment, User],
+//   synchronize: true,
+// });
+
 export const AppDataSource = new DataSource({
   type: "postgres",
   host: POSTGRES_HOST,

@@ -23,8 +23,7 @@ services:
     build: ./api
     command: npm run full
     restart: always
-    environment:
-      - EXPRESS_PORT=4000
+    env_file: .env
     volumes:
       - ./api:/app/
     depends_on:

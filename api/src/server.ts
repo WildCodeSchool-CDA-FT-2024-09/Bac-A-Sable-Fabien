@@ -4,13 +4,8 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import setCookie from "set-cookie-parser";
 import * as jwt from "jsonwebtoken";
-import { buildSchema } from "type-graphql";
 import { AppDataSource } from "./database/data-source";
-import RepoResolver from "./repo/repo.resolver";
-import StatusResolver from "./status/status.resolver";
-import LangResolver from "./lang/lang.resolver";
-import CommentResolver from "./comment/comment.resolver";
-import UserResolver from "./user/user.resolver";
+import getSchema from "./schema";
 
 dotenv.config();
 const { PORT, AUTH_SECRET_KEY } = process.env;
@@ -18,28 +13,7 @@ const { PORT, AUTH_SECRET_KEY } = process.env;
 (async () => {
   await AppDataSource.initialize();
 
-  const schema = await buildSchema({
-    resolvers: [
-      StatusResolver,
-      RepoResolver,
-      LangResolver,
-      CommentResolver,
-      UserResolver,
-    ],
-    authChecker: ({ context }, roles): boolean => {
-      console.log(context.cookie);
-      console.log("roles", roles);
-
-      // admin user (with the @Authorized() decorator in the resolver)
-      if (roles.length > 0)
-        return roles.some((role) => context.cookie.role === role);
-
-      // other connected users
-      if (context.cookie) return true;
-
-      return false;
-    },
-  });
+  const schema = await getSchema();
 
   const server = new ApolloServer({
     schema,
