@@ -2,10 +2,10 @@ services:
   db:
     image: postgres
     environment:
-      - POSTGRES_PASSWORD=TB&0*ybP*3u3P0
-      - POSTGRES_DB=feub_bacasable
-      - POSTGRES_USER=feub
-      - POSTGRES_HOST=postgresql-feub.alwaysdata.net
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST=db
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
@@ -22,10 +22,10 @@ services:
         npm run test
     restart: always
     environment:
-      - POSTGRES_PASSWORD=TB&0*ybP*3u3P0
-      - POSTGRES_DB=feub_bacasable
-      - POSTGRES_USER=feub
-      - POSTGRES_HOST=postgresql-feub.alwaysdata.net
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST=db
     depends_on:
       db:
         condition: service_healthy
